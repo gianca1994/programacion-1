@@ -4,6 +4,5 @@
 /lib/
 lib64
 /share/
-.env
+api/.env
 pyvenv.cfg
-
