@@ -1,10 +1,13 @@
 from flask_restful import Resource
-from flask import request
+from flask import request, jsonify
+from .. import db
+from main.models import SensorModel
 
 SENSORS = {
     1: {'name': 'Sensor1', 'status': 'activaded'},
     2: {'name': 'Sensor2', 'status': 'disabled'},
 }
+
 
 # -------------------------------------------------------------------------------------#
 # Creamos la clase para el recurso "Sensor".
@@ -12,61 +15,57 @@ SENSORS = {
 
 class Sensor(Resource):
 
-# -------------------------------------------------------------------------------------#
-# Primero definimos "GET" para obtener el recurso de la coleccion "SENSORS" y su "ID".
-# -------------------------------------------------------------------------------------#
-
+    # Primero definimos "GET" para obtener el recurso de la coleccion "SENSORS" y su "ID".
     def get(self, id):
-        if int(id) in SENSORS:
-            # Si el ID del recurso existe, nos devuelve lo siguiente:
-            return SENSORS[int(id)]
-        # Si no existe, nos devuelve el siguiente error de cliente "404", con el mensaje.
-        return 'Sensor not found', 404
+        # Asignamos a la variable "sensor" un sensor traido de la db, en caso de no existir, nos dara error 404.
+        sensor = db.session.query(SensorModel).get_or_404(id)
 
-# -------------------------------------------------------------------------------------#
-# Ahora definimos "PUT" para modificar un recurso de la coleccion "SENSORS".
-# -------------------------------------------------------------------------------------#
+        # Nos devuelve el sensor pedido por id en formato JSON.
+        return sensor.to_json()
 
+    # Ahora definimos "PUT" para modificar un sensor.
     def put(self, id):
-        # Verificamos si existe el "Sensor".
-        if int(id) in SENSORS:
-            # Si existe, traemos el "Sensor" del diccionario y lo cargamos en la variable.
-            sensor = SENSORS[int(id)]
-            # Extraemos los valores a modificar de la info consultada, en formato json y guarda en "data".
-            data = request.get_json()
-            # Actualizo el diccionaro "sensor", con los nuevos datos de "data".
-            sensor.update(data)
-            # Nos devuelve el sensor modificado con un codigo "201" (EXITO!).
-            return sensor, 201
-        # Si no esta el sensor, nos devuelve el mensaje con un codigo "404" (Error de cliente).
-        return 'Sensor not found', 404
 
-# -------------------------------------------------------------------------------------#
-# Definimos "DELETE" para eliminar un recurso de la coleccion "SENSORS".
-# -------------------------------------------------------------------------------------#
+        # Verificamos si existe el "Sensor", si esta lo almacena en "sensor, sino nos da error 404.
+        sensor = db.session.query(SensorModel).get_or_404(id)
+        # En la variable data guardamos los datos obtenidos.
+        data = request.get_json().items()
 
+        # Utilizamos un FOR para recorrer el diccionario y evalua el contenido alojado en data.
+        for key, value in data:
+            setattr(sensor, key, value)
+        # Agregamos un sensor.
+        db.session.add(sensor)
+        # Realiza la operacion, actualiza la db y retorna el sensor en formato JSON. Codigo 201.
+        try:
+            db.session.commit()
+            # Codigo "201 (Nuevo recurso Creado)".
+            return sensor.to_json(), 201
+        # Si algo pasa o ocurre mal...
+        except Exception as error:
+            # Error "400 (Solicitud incorrecta)".
+            return str(error), 400
+
+    # Definimos "DELETE" para eliminar un recurso de la coleccion "SENSORS".
     def delete(self, id):
-        # Verificamos si existe el "Sensor".
-        if int(id) in SENSORS:
-            del SENSORS[int(id)]
-            # Nos devuelve el mensaje de borrado con un codigo "204".
-            return 'Successful deletion', 204
-        # Si no esta el sensor, nos devuelve el mensaje con un codigo "404" (Error de cliente).
-        return 'Sensor not found', 404
+        # Verificamos si existe el "Sensor", si existe, lo almacena en la variable sensor, sino nos dara error 404.
+        sensor = db.session.query(SensorModel).get_or_404(id)
 
-# -------------------------------------------------------------------------------------#
-# Definimos "POST" para crear un recurso y alojarlo en la coleccion "SENSORS".
-# -------------------------------------------------------------------------------------#
+        # Ahora eliminaremos registro del sensor asignado a la variable "sensor".
+        db.session.delete(sensor)
 
-    def post(self):
-        # Extraemos los valores a agregar, en formato json y guarda en "sensor".
-        sensor = request.get_json()
-        # Generamos un acumulador, asi cada vez aumenta el ID en 1 "+1" y nunca se va a repetir.
-        id = int(max(SENSORS.keys())) + 1
-        # Creamos una nueva entrada "SENSORS", al que le damos el valor de "sensor".
-        SENSORS[id] = sensor
-        # Nos devuelve el sensor que se acaba de crear con un codigo de exito "201".
-        return SENSORS[id], 201
+        # Realiza la operacion, actualiza la db. Codigo 204.
+        try:
+            db.session.commit()
+            # Nos devuelve el mensaje de borrado con un codigo "204 (No hay contenido)".
+            return 'Successful deleted sensor', 204
+
+        # Si algo pasa o ocurre mal...
+        except Exception as error:
+            # Realiza un rollback y retrocede y nos retorna un error "400 (Solicitud incorrecta)"
+            db.session.rollback()
+            return str(error), 400
+
 
 # -------------------------------------------------------------------------------------#
 # Creamos la clase para la coleccion "Sensors".
@@ -74,9 +73,52 @@ class Sensor(Resource):
 
 class Sensors(Resource):
 
-# -------------------------------------------------------------------------------------#
-# Usamos el metodo "GET" para obtener la coleccion de recursos "SENSORS".
-# -------------------------------------------------------------------------------------#
+    # Usamos el metodo "GET" para obtener la coleccion de recursos "SENSORS".
     def get(self):
-        # Nos devuelve la coleccion "SENSORS".
-        return SENSORS
+        # Traemos la coleccion de sensores de la db y la alojamos en la variable "sensors".
+        sensors = db.session.query(SensorModel)
+        # Filtraremos el/los sensores a mostrar "request.get_json().items()" y los almacenaremos en la variable.
+        filters = request.get_json().items()
+
+        # Utilizamos un FOR para recorrer el diccionario y evalua el contenido alojado en filters.
+        for key, value in filters:
+            # Utilizamos condicionales para filtrar por partes...
+            if key == "userId":
+                sensors = sensors.filter(SensorModel.userId == value)
+            if key == "user":
+                if value:
+                    sensors = sensors.filter(SensorModel.userId != None)
+                else:
+                    sensors = sensor.filter(SensorModel.userId is None)
+            if key == "name":
+                sensors = sensors.filter(SensorModel.name == value)
+            if key == "ip":
+                sensors = sensors.filter(SensorModel.ip == value)
+            if key == "port":
+                sensors = sensors.filter(SensorModel.port == value)
+            if key == "active":
+                sensors = sensors.filter(SensorModel.active == value)
+            if key == "status":
+                sensors = sensors.filter(SensorModel.status == value)
+
+        sensors.all()
+
+        # Nos devuelve la coleccion con los sensores filtrados.
+        return jsonify({"Sensors": [sensor.to_json() for sensor in sensors.items]})
+
+    # Definimos "POST" para agregar un sensor a la coleccion.
+    def post(self):
+        # Traemos la coleccion de sensores de la db y la alojamos en la variable "sensors".
+        sensor = SensorModel.from_json(request.get_json())
+        # Añadimos un sensor a la coleccion
+        db.session.add(sensor)
+
+        # Realiza la operacion
+        try:
+            # Actualiza la db y nos devuelve el mensaje de creado con un codigo "201 (Nuevo recurso Creado)".
+            db.session.commit()
+            return sensor.to_json(), 201
+        # Si algo pasa o ocurre mal...
+        except Exception as error:
+            # Nos retorna el error "400 (Solicitud incorrecta)"
+            return str(error), 400

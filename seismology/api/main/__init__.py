@@ -2,7 +2,6 @@ from flask import Flask
 from dotenv import load_dotenv
 from flask_restful import Api
 from flask_sqlalchemy import SQLAlchemy
-import main.resources as resources
 import os
 
 api = Api()
@@ -15,7 +14,7 @@ def create_app():
     load_dotenv()
 
     # Verifica si existe o no una DB con ese nombre y si no existe la crea...
-    if not os.path.exists(os.getenv('SQLALCHEMY_DATABASE_PATH') + os.getenv('SQLALCHEMY_DATABASE_NAME')):
+    if not os.path.exists(os.getenv("SQLALCHEMY_DATABASE_PATH") + os.getenv("SQLALCHEMY_DATABASE_NAME")):
         # Crea una base de datos con ese nombre.
         os.mknod(os.getenv('SQLALCHEMY_DATABASE_PATH') + os.getenv('SQLALCHEMY_DATABASE_NAME'))
 
@@ -25,9 +24,11 @@ def create_app():
     # Ahora indicamos la url de nuestra base de datos
     app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:////' + os.getenv('SQLALCHEMY_DATABASE_PATH') + os.getenv(
         'SQLALCHEMY_DATABASE_NAME')
-    db.init_app(app)
 
     # Importamos de la carpeta "resources" todos los recursos agregados en "__init__.py".
+    import main.resources as resources
+    api.add_resource(resources.UserResource, '/user/<id>')
+    api.add_resource(resources.UsersResource, '/users')
     api.add_resource(resources.SensorResource, '/sensors/<id>')
     api.add_resource(resources.SensorsResource, '/sensors')
     api.add_resource(resources.VerifSeismResource, '/verif-seisms/<id>')
@@ -36,5 +37,6 @@ def create_app():
     api.add_resource(resources.UnverifSeismsResource, '/unverif-seisms')
 
     # Iniciamos la "app".
+    db.init_app(app)
     api.init_app(app)
     return app
