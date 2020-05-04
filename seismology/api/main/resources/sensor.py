@@ -3,11 +3,6 @@ from flask import request, jsonify
 from .. import db
 from main.models import SensorModel
 
-SENSORS = {
-    1: {'name': 'Sensor1', 'status': 'activaded'},
-    2: {'name': 'Sensor2', 'status': 'disabled'},
-}
-
 
 # -------------------------------------------------------------------------------------#
 # Creamos la clase para el recurso "Sensor".
@@ -75,6 +70,12 @@ class Sensors(Resource):
 
     # Usamos el metodo "GET" para obtener la coleccion de recursos "SENSORS".
     def get(self):
+
+        # Definimos la variable "page" para decir cuantas paginas tendremos.
+        page = 1
+        # Definimos "perpage" para decir cuantos sensores mostrara cada pagina.
+        perpage = 10
+
         # Traemos la coleccion de sensores de la db y la alojamos en la variable "sensors".
         sensors = db.session.query(SensorModel)
         # Filtraremos el/los sensores a mostrar "request.get_json().items()" y los almacenaremos en la variable.
@@ -90,18 +91,25 @@ class Sensors(Resource):
                     sensors = sensors.filter(SensorModel.userId != None)
                 else:
                     sensors = sensor.filter(SensorModel.userId is None)
-            if key == "name":
-                sensors = sensors.filter(SensorModel.name == value)
-            if key == "ip":
-                sensors = sensors.filter(SensorModel.ip == value)
-            if key == "port":
-                sensors = sensors.filter(SensorModel.port == value)
-            if key == "active":
-                sensors = sensors.filter(SensorModel.active == value)
-            if key == "status":
-                sensors = sensors.filter(SensorModel.status == value)
+                if key == "name":
+                    sensors = sensors.filter(SensorModel.name == value)
+                if key == "ip":
+                    sensors = sensors.filter(SensorModel.ip == value)
+                if key == "port":
+                    sensors = sensors.filter(SensorModel.port == value)
+                if key == "active":
+                    sensors = sensors.filter(SensorModel.active == value)
+                if key == "status":
+                    sensors = sensors.filter(SensorModel.status == value)
 
-        sensors.all()
+                # Definimos los if dentro de for para paginas y cantidad de sensores mostrados por pagina.
+                if key == "page":
+                    page = value
+                if key == "perpage":
+                    perpage = value
+
+                # Alojamos en la variable sensors, todos los sensores obtenidos de las paginas.
+                sensors = sensors.paginate(page, perpage, True, 50)
 
         # Nos devuelve la coleccion con los sensores filtrados.
         return jsonify({"Sensors": [sensor.to_json() for sensor in sensors.items]})

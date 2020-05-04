@@ -1,7 +1,5 @@
 from .. import db
-from datetime import datetime as dt
 from .Sensor import Sensor as SensorModel
-
 
 # -------------------------------------------------------------------------------------#
 # Creamos la clase Seism con (db.Model) para que cree una tabla en la base de datos
@@ -10,7 +8,7 @@ from .Sensor import Sensor as SensorModel
 class Seism(db.Model):
     # Definimos los atributos que van a llevar las tablas de la DB.
     id = db.Column(db.Integer, primary_key=True)
-    datetime = db.Column(db.DateTime, nullable=False)
+    datime = db.Column("datetime", db.DateTime, nullable = False)
     magnitude = db.Column(db.Float, nullable=False)
     latitude = db.Column(db.String(99), nullable=False)
     longitude = db.Column(db.String(99), nullable=False)
@@ -21,11 +19,23 @@ class Seism(db.Model):
     sensorId = db.Column(db.Integer, db.ForeignKey('sensor.id', ondelete='RESTRICT'), nullable=False)
     sensor = db.relationship('Sensor', back_populates='seisms', uselist=False, single_parent=True)
 
+
+    # La función integrada nos permitirá interceptar la escritura, lectura o borrado de los atributos...
+    @property
+    def dtb(self):
+        return self.datime
+
+    # Se encarga de interceptar cuando se escriba. (set = definir)
+    @dtb.setter
+    def setDT(self, value):
+        nwVal = dtdb.strptime(value, "%Y-%m-%d %H:%M:%S")
+        self.datime = nwVal
+
     # Creamos la funcion __repr__ que nos mostrara los datos de cada seism que carguemos.
     def __repr__(self):
         # Nos devuelve un seism con 6 atributos.
         return '<Seism: %r %r %r %r %r %r >' % (
-            self.datetime, self.magnitude, self.latitude, self.longitude, self.depth, self.verified)
+            self.datime, self.magnitude, self.latitude, self.longitude, self.depth, self.verified)
 
     # Para convertir un obj a JSON, primero definimos "to_json".
     def to_json(self):
@@ -34,7 +44,7 @@ class Seism(db.Model):
 
         # Realizamos la operacion...
         seism_json = {
-            'id': self.id, 'datetime': self.datetime.strftime('%Y-%m-%d %H:%M:%S'), 'magnitude': str(self.magnitude),
+            'id': self.id, 'datetime': self.datime.strftime("%Y-%m-%d %H:%M:%S"), 'magnitude': str(self.magnitude),
             'latitude': str(self.latitude), 'longitude': str(self.longitude), 'depth': self.depth,
             'verified': self.verified, 'sensorid': self.sensorid, 'sensor': self.sensor.to_json()
         }
@@ -45,9 +55,10 @@ class Seism(db.Model):
     @staticmethod
     # Para convertir de JSON a obj, primero definimos "from_json".
     def from_json(seism_json):
+
         # Luego asiganmos a las variables, los valores traidos del JSON usando "seism_json.get", para en cada caso.
         id = seism_json.get('id')
-        datetime = dt.strptime(seism_json.get('datetime'), '%Y-%m-%d %H:%M:%S')
+        dtb = dtdb.strptime(seism_json.get('datetime'), "%Y-%m-%d %H:%M:%S")
         magnitude = seism_json.get('magnitude')
         latitude = seism_json.get('latitude')
         longitude = seism_json.get('longitude')
@@ -56,5 +67,5 @@ class Seism(db.Model):
         sensorid = seism_json.get('sensorid')
 
         # Devolvemos el Seism con todos los argumentos en forma de OBJETO
-        return Seism(id=id, datetime=datetime, magnitude=magnitude, latitude=latitude, longitude=longitude,
+        return Seism(id=id, datetime=dtb, magnitude=magnitude, latitude=latitude, longitude=longitude,
                      depth=depth, verified=verified, sensorid=sensorid)

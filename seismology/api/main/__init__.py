@@ -2,6 +2,7 @@ from flask import Flask
 from dotenv import load_dotenv
 from flask_restful import Api
 from flask_sqlalchemy import SQLAlchemy
+from sqlalchemy import event
 import os
 
 api = Api()
@@ -25,6 +26,19 @@ def create_app():
     app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:////' + os.getenv('SQLALCHEMY_DATABASE_PATH') + os.getenv(
         'SQLALCHEMY_DATABASE_NAME')
 
+    db.init_app(app)
+
+
+    # Ahora haceremos las conecciones de las claves foraneas cuando iniciamos el servidor...
+    if 'sqlite' in app.config['SQLALCHEMY_DATABASE_URI']:
+
+        def PrimaryKeys(conection, conection_record):
+            conection.execute('pragma foreign_keys=ON')
+
+        with app.app_context():
+            event.listen(db.engine, 'connect', PrimaryKeys)
+
+
     # Importamos de la carpeta "resources" todos los recursos agregados en "__init__.py".
     import main.resources as resources
     api.add_resource(resources.UserResource, '/user/<id>')
@@ -37,6 +51,5 @@ def create_app():
     api.add_resource(resources.UnverifSeismsResource, '/unverif-seisms')
 
     # Iniciamos la "app".
-    db.init_app(app)
     api.init_app(app)
     return app
