@@ -182,7 +182,7 @@ class UnverifSeism(Resource):
             db.session.commit()
 
             # Y nos devuelve el cod. 204 con el mensaje:
-            return "Unverified seism delete", 204
+            return "Unverif seism delete", 204
         # Si no.
         else:
             # Si no, nos devuelve el error "403 (Acceso denegado o Prohibido)"
@@ -242,7 +242,7 @@ class UnverifSeisms(Resource):
         seisms = seisms.paginate(page, perpage, True, 250)
 
         # Nos devuelve la coleccion con los seisms no verificados filtrados.
-        return jsonify({"Unverified-seisms": [seism.to_json() for seism in seisms]})
+        return jsonify({"Unverif-seisms": [seism.to_json() for seism in seisms.items]})
 
 
     # Definimos "POST" para agregar un seisms no verificado a la coleccion.
