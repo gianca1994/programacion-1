@@ -90,7 +90,7 @@ class Sensors(Resource):
                 if value:
                     sensors = sensors.filter(SensorModel.userId != None)
                 else:
-                    sensors = sensor.filter(SensorModel.userId is None)
+                    sensors = sensors.filter(SensorModel.userId is None)
                 if key == "name":
                     sensors = sensors.filter(SensorModel.name == value)
                 if key == "ip":
@@ -101,6 +101,12 @@ class Sensors(Resource):
                     sensors = sensors.filter(SensorModel.active == value)
                 if key == "status":
                     sensors = sensors.filter(SensorModel.status == value)
+                if value == "active.desc":
+                    sensors = sensors.order_by(SensorModel.active.desc())
+                if value == "status.desc":
+                    sensors = sensors.order_by(SensorModel.status.desc())
+                if value == "name.desc":
+                    sensors = sensors.order_by(SensorModel.name.desc())
 
                 # Definimos los if dentro de for para paginas y cantidad de sensores mostrados por pagina.
                 if key == "page":
@@ -108,8 +114,8 @@ class Sensors(Resource):
                 if key == "perpage":
                     perpage = value
 
-                # Alojamos en la variable sensors, todos los sensores obtenidos de las paginas.
-                sensors = sensors.paginate(page, perpage, True, 50)
+        # Alojamos en la variable sensors, todos los sensores obtenidos de las paginas.
+        sensors = sensors.paginate(page, perpage, True, 500)
 
         # Nos devuelve la coleccion con los sensores filtrados.
         return jsonify({"Sensors": [sensor.to_json() for sensor in sensors.items]})
