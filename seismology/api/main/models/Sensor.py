@@ -15,8 +15,9 @@ class Sensor(db.Model):
     status = db.Column(db.Boolean, nullable=False)
     active = db.Column(db.Boolean, nullable=False)
 
-    # Relaciones entre tablas
+    # Clave foranea
     userId = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=True)
+    # Relaciones entre tablas
     user = db.relationship('User', back_populates='sensors', uselist=False, single_parent=True)
     seisms = db.relationship('Seism', back_populates='sensor', passive_deletes='all')
 

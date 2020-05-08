@@ -1,5 +1,7 @@
 from .. import db
 from .Sensor import Sensor as SensorModel
+from datetime import datetime as dtdb
+
 
 # -------------------------------------------------------------------------------------#
 # Creamos la clase Seism con (db.Model) para que cree una tabla en la base de datos
@@ -8,7 +10,7 @@ from .Sensor import Sensor as SensorModel
 class Seism(db.Model):
     # Definimos los atributos que van a llevar las tablas de la DB.
     id = db.Column(db.Integer, primary_key=True)
-    datime = db.Column("datetime", db.DateTime, nullable = False)
+    datime = db.Column("datetime", db.DateTime, nullable=False)
     magnitude = db.Column(db.Float, nullable=False)
     latitude = db.Column(db.String(99), nullable=False)
     longitude = db.Column(db.String(99), nullable=False)
@@ -18,7 +20,6 @@ class Seism(db.Model):
     # Relaciones entre tablas
     sensorId = db.Column(db.Integer, db.ForeignKey('sensor.id', ondelete='RESTRICT'), nullable=False)
     sensor = db.relationship('Sensor', back_populates='seisms', uselist=False, single_parent=True)
-
 
     # La función integrada nos permitirá interceptar la escritura, lectura o borrado de los atributos...
     @property
@@ -55,7 +56,6 @@ class Seism(db.Model):
     @staticmethod
     # Para convertir de JSON a obj, primero definimos "from_json".
     def from_json(seism_json):
-
         # Luego asiganmos a las variables, los valores traidos del JSON usando "seism_json.get", para en cada caso.
         id = seism_json.get('id')
         dtb = dtdb.strptime(seism_json.get('datetime'), "%Y-%m-%d %H:%M:%S")

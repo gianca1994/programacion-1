@@ -2,8 +2,9 @@ from flask_restful import Resource
 from flask import request, jsonify
 from .. import db
 from main.models import SeismModel, SensorModel
-from random import uniform, random, randint, uniform
+from random import random, randint, uniform
 import time
+from flask_jwt_extended import jwt_required, get_jwt_claims, get_jwt_identity
 
 
 # -------------------------------------------------------------------------------------#
@@ -52,16 +53,6 @@ class VerifSeisms(Resource):
                 seisms = seisms.filter(SeismModel.dt.like('%' + value + '%'))
             if key == "magnitude":
                 seisms = seisms.filter(SeismModel.magnitude == value)
-            if key == "latitude":
-                seisms = seisms.filter(SeismModel.latitude == value)
-            if key == "longitude":
-                seisms = seisms.filter(SeismModel.longitude == value)
-            if key == "depth":
-                seisms = seisms.filter(SeismModel.depth == value)
-            if key == "sensorId":
-                seisms = seisms.filter(SeismModel.sensorId == value)
-
-            # Agregamos if para el filtrado por nombre del sensor.
             if key == "sensor.name":
                 seisms = seisms.join(SeismModel.sensor).filter(SensorModel.name.like('%' + value + '%'))
 
@@ -87,7 +78,7 @@ class VerifSeisms(Resource):
                 seisms = seisms.paginate(page, perpage, True, 500000)
 
         # Con el return nos devolvera la coleccion de Seisms.
-        return jsonify({'Verif-seisms': [seism.to_json() for seism in seisms]})
+        return jsonify({'Verif-seisms': [seism.to_json() for seism in seisms.items]})
 
     # Definimos "POST" para agregar un sieism verificado a la coleccion.
     def post(self):
@@ -124,6 +115,7 @@ class VerifSeisms(Resource):
 
 class UnverifSeism(Resource):
 
+    @jwt_required
     # Definimos "GET" para obtener un "UnverifSeism" con su id de la coleccion.
     def get(self, id):
         # Asignamos a la variable "seism" un seism traido de la db, si no existe, error 404.
@@ -139,6 +131,7 @@ class UnverifSeism(Resource):
             # En caso de no existir, nos devuelve un error 403 "Prohibido (el servidor se niega a devolver el contenido)".
             return "Denied Access", 403
 
+    @jwt_required
     # Ahora para modifcar un recurso de la coleccion definimos un "PUT".
     def put(self, id):
 
@@ -170,6 +163,7 @@ class UnverifSeism(Resource):
             # Si no, nos devuelve el error "403 (Acceso denegado o Prohibido)"
             return "Denied Access", 403
 
+    @jwt_required
     # Por ultimo definimos un "delete" para borrar un seism no verificado de la coleccion.
     def delete(self, id):
         # Traemos de la coleccion de seisms un seism y lo alojamos en la variable, si no existe, error 404.
@@ -194,6 +188,8 @@ class UnverifSeism(Resource):
 # -------------------------------------------------------------------------------------#
 
 class UnverifSeisms(Resource):
+
+    @jwt_required
     # Aca definimos un "GET" para obtener la coleccion de UnverifSeisms.
     def get(self):
 
@@ -203,34 +199,23 @@ class UnverifSeisms(Resource):
         perpage = 250
 
         # Traemos la coleccion de seisms, pero filtramos los seism verificados.
-        seisms = db.session.query(SeismModel).filter(SeismModel.verified == False)
         filters = request.get_json().items()
+        seisms = db.session.query(SeismModel).filter(SeismModel.verified == False)
 
         # Utilizamos un FOR para recorrer el diccionario y evalua el contenido alojado en filters.
         for key, value in filters:
             # Utilizamos condicionales para filtrar por partes...
-            if key == "datetime":
-                seisms = seisms.filter(SeismModel.dt == value)
             if key == "sensorId":
                 seisms = seisms.filter(SeismModel.sensorId == value)
-            if key == "latitude":
-                seisms = seisms.filter(SeismModel.latitude == value)
-            if key == "longitude":
-                seisms = seisms.filter(SeismModel.longitude == value)
-            if key == "depth":
-                seisms = seisms.filter(SeismModel.depth == value)
-            if key == "magnitude":
-                seisms = seisms.filter(SeismModel.magnitude == value)
 
             # ORDENAMIENTO
             # Utilizamos sort_by para ordenar todo de mayor a menor.
             if key == "sort_by":
                 if value == "datime":
                     seisms = seisms.order_by(SeismModel.dt)
-
-            # Se agrega datetime.desc para realizar el ordenamiento y se almacena en la variable.
-            if value == "datetime.desc":
-                seisms = seisms.order_by(SeismModel.dt.desc())
+                # Se agrega datetime.desc para realizar el ordenamiento y se almacena en la variable.
+                if value == "datetime.desc":
+                    seisms = seisms.order_by(SeismModel.dt.desc())
 
             # Definimos los if dentro de for para la paginacion de sismos no verificados mostrados por pagina.
             if key == "page":
@@ -244,7 +229,7 @@ class UnverifSeisms(Resource):
         # Nos devuelve la coleccion con los seisms no verificados filtrados.
         return jsonify({"Unverif-seisms": [seism.to_json() for seism in seisms.items]})
 
-
+    @jwt_required
     # Definimos "POST" para agregar un seisms no verificado a la coleccion.
     def post(self):
 

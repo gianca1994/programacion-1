@@ -2,6 +2,7 @@ from flask_restful import Resource
 from flask import request, jsonify
 from .. import db
 from main.models import SensorModel
+from main.auth.decorators import admin_required
 
 
 # -------------------------------------------------------------------------------------#
@@ -10,6 +11,7 @@ from main.models import SensorModel
 
 class Sensor(Resource):
 
+    @admin_required
     # Primero definimos "GET" para obtener el recurso de la coleccion "SENSORS" y su "ID".
     def get(self, id):
         # Asignamos a la variable "sensor" un sensor traido de la db, en caso de no existir, nos dara error 404.
@@ -18,6 +20,7 @@ class Sensor(Resource):
         # Nos devuelve el sensor pedido por id en formato JSON.
         return sensor.to_json()
 
+    @admin_required
     # Ahora definimos "PUT" para modificar un sensor.
     def put(self, id):
 
@@ -41,6 +44,7 @@ class Sensor(Resource):
             # Error "400 (Solicitud incorrecta)".
             return str(error), 400
 
+    @admin_required
     # Definimos "DELETE" para eliminar un recurso de la coleccion "SENSORS".
     def delete(self, id):
         # Verificamos si existe el "Sensor", si existe, lo almacena en la variable sensor, sino nos dara error 404.
@@ -68,6 +72,7 @@ class Sensor(Resource):
 
 class Sensors(Resource):
 
+    @admin_required
     # Usamos el metodo "GET" para obtener la coleccion de recursos "SENSORS".
     def get(self):
 
@@ -76,14 +81,18 @@ class Sensors(Resource):
         # Definimos "perpage" para decir cuantos sensores mostrara cada pagina.
         perpage = 10
 
-        # Traemos la coleccion de sensores de la db y la alojamos en la variable "sensors".
-        sensors = db.session.query(SensorModel)
         # Filtraremos el/los sensores a mostrar "request.get_json().items()" y los almacenaremos en la variable.
         filters = request.get_json().items()
+        # Traemos la coleccion de sensores de la db y la alojamos en la variable "sensors".
+        sensors = db.session.query(SensorModel)
 
         # Utilizamos un FOR para recorrer el diccionario y evalua el contenido alojado en filters.
         for key, value in filters:
             # Utilizamos condicionales para filtrar por partes...
+            if key == "userId[lte]":
+                sensors = sensors.filter(SensorModel.userId <= value)
+            if key == "userId[gte]":
+                sensors = sensors.filter(SensorModel.userId >= value)
             if key == "userId":
                 sensors = sensors.filter(SensorModel.userId == value)
             if key == "user":
@@ -91,28 +100,31 @@ class Sensors(Resource):
                     sensors = sensors.filter(SensorModel.userId != None)
                 else:
                     sensors = sensors.filter(SensorModel.userId is None)
-                if key == "name":
-                    sensors = sensors.filter(SensorModel.name == value)
                 if key == "ip":
                     sensors = sensors.filter(SensorModel.ip == value)
                 if key == "port":
                     sensors = sensors.filter(SensorModel.port == value)
-                if key == "active":
-                    sensors = sensors.filter(SensorModel.active == value)
-                if key == "status":
-                    sensors = sensors.filter(SensorModel.status == value)
-                if value == "active.desc":
-                    sensors = sensors.order_by(SensorModel.active.desc())
-                if value == "status.desc":
-                    sensors = sensors.order_by(SensorModel.status.desc())
-                if value == "name.desc":
-                    sensors = sensors.order_by(SensorModel.name.desc())
 
-                # Definimos los if dentro de for para paginas y cantidad de sensores mostrados por pagina.
-                if key == "page":
-                    page = value
-                if key == "perpage":
-                    perpage = value
+                # Aca comienza el ordenamiento...
+                if key == "sort_by":
+                    if key == "name":
+                        sensors = sensors.order_by(SensorModel.name)
+                    if value == "name.desc":
+                        sensors = sensors.order_by(SensorModel.name.desc())
+                    if key == "active":
+                        sensors = sensors.order_by(SensorModel.active)
+                    if value == "active.desc":
+                        sensors = sensors.order_by(SensorModel.active.desc())
+                    if key == "status":
+                        sensors = sensors.order_by(SensorModel.status)
+                    if value == "status.desc":
+                        sensors = sensors.order_by(SensorModel.status.desc())
+
+                    # Definimos los if dentro de for para paginas y cantidad de sensores mostrados por pagina.
+                    if key == "page":
+                        page = value
+                    if key == "perpage":
+                        perpage = value
 
         # Alojamos en la variable sensors, todos los sensores obtenidos de las paginas.
         sensors = sensors.paginate(page, perpage, True, 500)
@@ -120,6 +132,7 @@ class Sensors(Resource):
         # Nos devuelve la coleccion con los sensores filtrados.
         return jsonify({"Sensors": [sensor.to_json() for sensor in sensors.items]})
 
+    @admin_required
     # Definimos "POST" para agregar un sensor a la coleccion.
     def post(self):
         # Traemos la coleccion de sensores de la db y la alojamos en la variable "sensors".
