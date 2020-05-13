@@ -21,7 +21,7 @@ def login():
 
         # Utilizamos "create_access_token" para crear un token para que el usuario lo use cuando quiera hacer
         # acciones que requieran autenticaciony lo almacenamos en la variable...
-        access_token = create_access_token(identity=user.id)
+        access_token = create_access_token(identity=user)
 
         # Alojamos el id, email y token de acceso en la variable data
         data = '{"id":"' + str(user.id) + '","email":"' + str(user.email) + '","access_token":"' + access_token + '"}'

@@ -120,11 +120,11 @@ class Sensors(Resource):
                     if value == "status.desc":
                         sensors = sensors.order_by(SensorModel.status.desc())
 
-                    # Definimos los if dentro de for para paginas y cantidad de sensores mostrados por pagina.
-                    if key == "page":
-                        page = value
-                    if key == "perpage":
-                        perpage = value
+            # Definimos los if dentro de for para paginas y cantidad de sensores mostrados por pagina.
+            if key == "page":
+                page = value
+            if key == "perpage":
+                perpage = value
 
         # Alojamos en la variable sensors, todos los sensores obtenidos de las paginas.
         sensors = sensors.paginate(page, perpage, True, 500)
