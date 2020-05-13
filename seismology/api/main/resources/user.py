@@ -74,10 +74,17 @@ class Users(Resource):
     def post(self):
         # Traemos la coleccion de recursos y la alojamos en la variable "user"
         user = UserModel.from_json(request.get_json())
+        # Traemos el email de la db y lo filtramos por usuario
+        emailinuse = db.session.query(UserModel).filter(UserMode.email == user.email).scalar() is not None
+        # Si el email esta en uso, osea, se intenta duplicar
+        if emailinuse:
+            # Nos retorna que el email ya esta en uso con un codigo 409.
+            return "Email already in use", 409
+        # Si no
+        else:
+            # Agregamos un nuevo usuario y actualizamos la db.
+            db.session.add(user)
+            db.session.commit()
 
-        # Agregamos un nuevo usuario y actualizamos la db.
-        db.session.add(user)
-        db.session.commit()
-
-        # Nos devuelve el usuario AGREGADO con un codigo "201 (CREADO!!)".
-        return user.to_json(), 201
+            # Nos devuelve el usuario AGREGADO con un codigo "201 (CREADO!!)".
+            return user.to_json(), 201

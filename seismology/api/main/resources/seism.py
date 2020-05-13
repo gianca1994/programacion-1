@@ -2,9 +2,9 @@ from flask_restful import Resource
 from flask import request, jsonify
 from .. import db
 from main.models import SeismModel, SensorModel
-from random import random, randint, uniform
+from random import randint, uniform
 import time
-from flask_jwt_extended import jwt_required, get_jwt_claims, get_jwt_identity
+from flask_jwt_extended import jwt_required, get_jwt_identity
 
 
 # -------------------------------------------------------------------------------------#
@@ -39,7 +39,7 @@ class VerifSeisms(Resource):
         # Definimos la variable "page" para decir cuantas paginas tendremos.
         page = 1
         # Definimos "perpage" para decir cuantos sensores mostrara cada pagina.
-        perpage = 100000
+        perpage = 100
 
         # Analiza los datos de solicitud JSON entrantes y los almacena en "filter".
         filter = request.get_json().items()
@@ -49,6 +49,8 @@ class VerifSeisms(Resource):
 
         # Definimos "for" para los filtros en las consultas...
         for key, value in filter:
+            if key == "sensorId":
+                seisms = seisms.filter(SeismModel.sensorId == value)
             if key == "datetime":
                 seisms = seisms.filter(SeismModel.dt.like('%' + value + '%'))
             if key == "magnitude":
@@ -68,14 +70,14 @@ class VerifSeisms(Resource):
                 if value == "sensor.namedesc":
                     seisms = seisms.join(SeismModel.sensor).orderby(SensorModel.name.desc())
 
-                # Definimos los if dentro de for para paginas y cantidad de sismos mostrados por pagina.
-                if key == "page":
-                    page = value
-                if key == "perpage":
-                    perpage = value
+            # Definimos los if dentro de for para paginas y cantidad de sismos mostrados por pagina.
+            if key == "page":
+                page = value
+            if key == "perpage":
+                perpage = value
 
-                # Alojamos en la variable seisms, todos los sismos verificados obtenidos de las paginas.
-                seisms = seisms.paginate(page, perpage, True, 500000)
+        # Alojamos en la variable seisms, todos los sismos verificados obtenidos de las paginas.
+        seisms = seisms.paginate(page, perpage, True, 5000)
 
         # Con el return nos devolvera la coleccion de Seisms.
         return jsonify({'Verif-seisms': [seism.to_json() for seism in seisms.items]})
@@ -94,7 +96,7 @@ class VerifSeisms(Resource):
                             'depth': randint(5, 250), 'magnitude': round(uniform(2.0, 5.5), 1),
                             'latitude': uniform(-180, 180), 'longitude': uniform(-90, 90),
                             'verified': True, 'sensorId': sensorsId[randint(0, len(sensorsId) - 1)]
-                            }
+            }
 
             seism = SeismModel.from_json(value_sensor)
             # Agregamos el seism a la db.
@@ -196,11 +198,13 @@ class UnverifSeisms(Resource):
         # Definimos la variable "page" para decir cuantas paginas tendremos.
         page = 1
         # Definimos "perpage" para decir cuantos sismos mostrara cada pagina.
-        perpage = 250
+        perpage = 100
 
         # Traemos la coleccion de seisms, pero filtramos los seism verificados.
         filters = request.get_json().items()
         seisms = db.session.query(SeismModel).filter(SeismModel.verified == False)
+        current_user_id = get_jwt_identity()
+        seisms = seisms.join(SeismModel.sensor).filter(SensorModel.userId == current_user_id)
 
         # Utilizamos un FOR para recorrer el diccionario y evalua el contenido alojado en filters.
         for key, value in filters:
@@ -224,7 +228,7 @@ class UnverifSeisms(Resource):
                 perpage = value
 
         # Alojamos en la variable seisms, todos los sismos obtenidos de las paginas.
-        seisms = seisms.paginate(page, perpage, True, 250)
+        seisms = seisms.paginate(page, perpage, True, 100)
 
         # Nos devuelve la coleccion con los seisms no verificados filtrados.
         return jsonify({"Unverif-seisms": [seism.to_json() for seism in seisms.items]})

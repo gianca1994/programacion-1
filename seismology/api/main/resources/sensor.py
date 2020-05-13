@@ -137,11 +137,10 @@ class Sensors(Resource):
     def post(self):
         # Traemos la coleccion de sensores de la db y la alojamos en la variable "sensors".
         sensor = SensorModel.from_json(request.get_json())
-        # Añadimos un sensor a la coleccion
-        db.session.add(sensor)
-
         # Realiza la operacion
         try:
+            # Añadimos un sensor a la coleccion
+            db.session.add(sensor)
             # Actualiza la db y nos devuelve el mensaje de creado con un codigo "201 (Nuevo recurso Creado)".
             db.session.commit()
             return sensor.to_json(), 201
