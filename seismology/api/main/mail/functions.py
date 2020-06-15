@@ -11,12 +11,11 @@ def sendMail(to, subject, template, **kwargs):
     try:
         # Definimos body (texto plano) y html (estilo con css) dependiendo del soporte del cliente de correo usa uno u otro.
         msg.body = render_template(template + ".txt", **kwargs)
-        msg.html = render_template(template + ".html", **kwargs)
+#        msg.html = render_template(template + ".html", **kwargs)
         # Envia el mensaje
         result = sendmail.send(msg)
 
     # En caso de salir un error SMTP (error de autenticacion o fallo al conectar al servidor)
-    except SMTPException as e:
-        print(str(e))
-        return "Mail deliver failed"
+    except SMTPException as error:
+        return "Mail deliver failed" + str(error)
     return True

@@ -55,3 +55,5 @@ def checkStatus():
         return jsonify({"sensors": [sensor.to_json() for sensor in sensors]})
     else:
         return "There're no deactivated sensors", 200
+
+

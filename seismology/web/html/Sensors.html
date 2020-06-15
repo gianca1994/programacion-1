@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Verified-Seisms</title>
+
+  <!-- Style CSS -->
+  <link rel="stylesheet" href="style.css" type="text/css">
+
+  <!-- CSS only -->
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css"
+    integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
+
+  <!-- JS, Popper.js, and jQuery -->
+  <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"
+    integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj"
+    crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
+    integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo"
+    crossorigin="anonymous"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"
+    integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI"
+    crossorigin="anonymous"></script>
+
+  <!-- Font Awesome -->
+  <script src="https://kit.fontawesome.com/ec398cbdc7.js" crossorigin="anonymous"></script>
+
+</head>
+
+<body>
+
+  <!-- Header -->
+  <header>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+      <a class="navbar-brand" href="#">Seismology</a>
+
+      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+        aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+
+      <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <div class="navbar-nav mr-auto">
+          <a class="nav-item nav-link active" href="#">Verfied-Seisms <span class="sr-only">(current)</span></a>
+          <a class="nav-item nav-link" href="#">Sensors</a>
+          <a class="nav-item nav-link" href="#">Users</a>
+        </div>
+	
+        <div class="navbar-nav text-light ml-auto">
+	  <a class="nav-item nav-link" href="#"><i>Logged in, Galvarini Giancarlo</i></a>
+	  <a class="nav-item nav-link" href="#"><i>Log Out</i></a>
+          <a class="nav-item nav-link" href="#"><i class="fas fa-user"></i></a>
+          <a class="nav-item nav-link" href="#"><i class="fas fa-house-user"></i></a>
+          <a class="nav-item nav-link" href="#"><i class="fas fa-database"></i></a>
+        </div>
+      </div>
+    </nav>
+  </header>
+
+  </br></br>
+
+  <!-- Filtro -->
+  <form class="form-inline my-2 my-lg-0 justify-content-center">
+    <input class="form-control mr-sm-1" type="search" placeholder="Filter" aria-label="Filter">
+    <select class="custom-select">
+      <option selected>Select one option for filter</option>
+      <option value="1">Date Time</option>
+      <option value="2">Depth</option>
+      <option value="3">Magnituded</option>
+      <option value="4">Latitude</option>
+      <option value="5">Longitude</option>
+    </select>
+    <button class="btn btn-outline-dark my-2 my-sm-0" type="submit">Filter</button>
+  </form>
+
+  </br>
+
+
+  <div class="row justify-content-center">
+    <div class="col-md-auto d-none d-md-block"></div>
+    <div class="col-md-auto">
+      <table class="table table-bordered table-responsive">
+        <thead class="thead-dark">
+
+
+          <tr>
+            <th scope="col">ID</th>
+            <th scope="col">Name</th>
+            <th scope="col">Status</th>
+            <th scope="col">Active</th>
+            <th scope="col">User Associated</th>
+            <th scope="col">Longitude</th>
+            <th scope="col">Actions</th>
+          </tr>
+
+        </thead>
+        <tbody>
+
+          <tr>
+            <th scope="row">1</th>
+            <td>Mark</td>
+            <td>Thornton</td>
+            <td>@asodkqw</td>
+            <td>Ldjqwod</td>
+            <td>the Bird</td>
+            <td>
+              <div class="btn-group" role="group">
+                <button type="button" class="btn btn-sm" data-toggle="tooltip" title="view">
+                  <i class="fas fa-eye"></i>
+                </button>
+                <button type="button" class="btn btn-sm " data-toggle="tooltip" title="delete">
+                  <i class="fas fa-trash"></i>
+                </button>
+                <button type="button" class="btn btn-sm" data-toggle="tooltip" title="edit">
+                  <i class="fas fa-edit"></i>
+                </button>
+              </div>
+            </td>
+          </tr>
+
+          <tr>
+            <th scope="row">2</th>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td>
+              <div class="btn-group" role="group">
+                <button type="button" class="btn btn-sm" data-toggle="tooltip" title="view">
+                  <i class="fas fa-eye"></i>
+                </button>
+                <button type="button" class="btn btn-sm " data-toggle="tooltip" title="delete">
+                  <i class="fas fa-trash"></i>
+                </button>
+                <button type="button" class="btn btn-sm" data-toggle="tooltip" title="edit">
+                  <i class="fas fa-edit"></i>
+                </button>
+              </div>
+            </td>
+
+          </tr>
+
+          <tr>
+            <th scope="row">3</th>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td>
+              <div class="btn-group" role="group">
+                <button type="button" class="btn btn-sm" data-toggle="tooltip" title="view">
+                  <i class="fas fa-eye"></i>
+                </button>
+                <button type="button" class="btn btn-sm " data-toggle="tooltip" title="delete">
+                  <i class="fas fa-trash"></i>
+                </button>
+                <button type="button" class="btn btn-sm" data-toggle="tooltip" title="edit">
+                  <i class="fas fa-edit"></i>
+                </button>
+              </div>
+            </td>
+
+          </tr>
+
+          <tr>
+            <th scope="row">4</th>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+
+            <td>
+              <div class="btn-group" role="group">
+                <button type="button" class="btn btn-sm" data-toggle="tooltip" title="view">
+                  <i class="fas fa-eye"></i>
+                </button>
+                <button type="button" class="btn btn-sm " data-toggle="tooltip" title="delete">
+                  <i class="fas fa-trash"></i>
+                </button>
+                <button type="button" class="btn btn-sm" data-toggle="tooltip" title="edit">
+                  <i class="fas fa-edit"></i>
+                </button>
+              </div>
+            </td>
+          </tr>
+
+          <tr>
+            <th scope="row">5</th>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td>
+              <div class="btn-group" role="group">
+                <button type="button" class="btn btn-sm" data-toggle="tooltip" title="view">
+                  <i class="fas fa-eye"></i>
+                </button>
+                <button type="button" class="btn btn-sm " data-toggle="tooltip" title="delete">
+                  <i class="fas fa-trash"></i>
+                </button>
+                <button type="button" class="btn btn-sm" data-toggle="tooltip" title="edit">
+                  <i class="fas fa-edit"></i>
+                </button>
+              </div>
+            </td>
+
+          </tr>
+
+        </tbody>
+      </table>
+    </div>
+    <div class="col-md-auto d-none d-md-block thead-dark"></div>
+  </div>
+
+
+<br>
+
+
+  <nav aria-label="...">
+    <ul class="pagination justify-content-center">
+      <li class="page-item disabled">
+        <a class="page-link" href="#" tabindex="-1">Previous</a>
+      </li>
+      <li class="page-item"><a class="page-link" href="#">1</a></li>
+      <li class="page-item active">
+        <a class="page-link" href="#">2 <span class="sr-only">(current)</span></a>
+      </li>
+      <li class="page-item"><a class="page-link" href="#">3</a></li>
+      <li class="page-item"><a class="page-link" href="#">4</a></li>
+      <li class="page-item"><a class="page-link" href="#">5</a></li>
+      <li class="page-item"><a class="page-link" href="#">6</a></li>
+      <li class="page-item"><a class="page-link" href="#">7</a></li>
+      <li class="page-item"><a class="page-link" href="#">8</a></li>
+      <li class="page-item"><a class="page-link" href="#">9</a></li>
+      <li class="page-item"><a class="page-link" href="#">10</a></li>
+
+      <li class="page-item">
+        <a class="page-link" href="#">Next</a>
+      </li>
+    </ul>
+  </nav>
+
+<br>
+
+  <footer class="page-footer bg-dark pt-4" with=100%>
+
+    <div class="container">
+      <div class="footer-copyright text-center py-2"><a href="#">Seismology - 2020</a>
+      </div>
+    </div>
+
+  </footer>
+</body>
+
+</html>
