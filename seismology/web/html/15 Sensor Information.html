@@ -1,0 +1,213 @@
+
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sensor Information</title>
+
+  <!-- Style CSS -->
+  <link rel="stylesheet" href="style.css" type="text/css">
+
+  <!-- CSS only -->
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css"
+    integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
+
+  <!-- JS, Popper.js, and jQuery -->
+  <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"
+    integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj"
+    crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
+    integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo"
+    crossorigin="anonymous"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"
+    integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI"
+    crossorigin="anonymous"></script>
+
+  <!-- Font Awesome -->
+  <script src="https://kit.fontawesome.com/ec398cbdc7.js" crossorigin="anonymous"></script>
+
+</head>
+
+<body>
+
+  <!-- Header -->
+  <header>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+      <a class="navbar-brand" href="#">Seismology</a>
+
+      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+        aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+
+      <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <div class="navbar-nav mr-auto">
+          <a class="nav-item nav-link active" href="#">Verfied-Seisms <span class="sr-only">(current)</span></a>
+          <a class="nav-item nav-link" href="#">Sensors</a>
+		     <a class="nav-item nav-link" href="#">Users</a>
+        </div>
+	
+        <div class="navbar-nav text-light ml-auto">
+	  <a class="nav-item nav-link" href="#"><i>Logged in, Galvarini Giancarlo</i></a>
+	  <a class="nav-item nav-link" href="#"><i>Log Out</i></a>
+          <a class="nav-item nav-link" href="#"><i class="fas fa-user"></i></a>
+          <a class="nav-item nav-link" href="#"><i class="fas fa-house-user"></i></a>
+          <a class="nav-item nav-link" href="#"><i class="fas fa-database"></i></a>
+        </div>
+      </div>
+    </nav>
+  </header>
+
+  </br></br>
+
+<center><h1>Sensor Information</h1></center>
+</br>
+
+<div class="media justify-content-center">
+
+  <div class="row col-md-auto justify-content-center">
+    <div class="col-md-auto d-none d-ml-auto"></div>
+    <div class="col-md-auto ">
+
+<div class="card text-center">
+  <div class="card-body">
+
+<table class="table">
+  <thead class="thead-dark">
+    <tr>
+
+      <th class="bg-dark text-white" scope="row">Sensor Information</th>
+      <th scope="col">Data</th>		
+
+    </tr>
+  </thead>
+  
+  <tbody>
+    <tr>
+      <th class="bg-dark text-white" scope="row">Name</th>
+      <td>13</td>
+
+    </tr>
+    <tr>
+      <th class="bg-dark text-white" scope="row">Status</th>
+      <td>
+				<div class="custom-control custom-radio custom-control-inline">
+				  <input type="radio" id="customRadioInline1" name="customRadioInline1" class="custom-control-input">
+				  <label class="custom-control-label" for="customRadioInline1">Working</label>
+				</div>
+				<div class="custom-control custom-radio custom-control-inline">
+				  <input type="radio" id="customRadioInline2" name="customRadioInline1" class="custom-control-input">
+				  <label class="custom-control-label" for="customRadioInline2">Not Working</label>
+				</div>
+		</td>
+    </tr>
+    <tr>
+      <th class="bg-dark text-white" scope="row">IP</th>
+      <td>192.168.0.1</td>
+    </tr>
+    <tr>
+      <th class="bg-dark text-white" scope="row">Port</th>
+      <td>9999</td>
+    </tr>
+	
+	<tr>
+		<th class="bg-dark text-white" scope="row">Active</th>
+			<td>
+				<div class="custom-control custom-radio custom-control-inline">
+				  <input type="radio" id="customRadioInline1" name="customRadioInline1" class="custom-control-input">
+				  <label class="custom-control-label" for="customRadioInline1">True</label>
+				</div>
+				<div class="custom-control custom-radio custom-control-inline">
+				  <input type="radio" id="customRadioInline2" name="customRadioInline1" class="custom-control-input">
+				  <label class="custom-control-label" for="customRadioInline2">False</label>
+				</div>
+			</td>
+	</tr>
+	
+	<tr>
+      <th class="bg-dark text-white" scope="row">User Associated</th>
+      <td>gianca9405@gmail.com</td>
+	   
+    </tr>
+	
+	
+ 		
+
+  </tbody>
+</table>
+
+</p>
+		</div>
+  
+	</div>
+	
+</div>
+
+<div class="col-md-auto d-none d-md-block thead-dark"></div>
+		
+  </div>
+
+  <div class="row justify-content-center">
+	  <div class="col-sm-auto">
+	    </br></br></br>
+		<div class="card">
+		  <div class="card-body">
+		<img src="Imagenes/Sensor-Information/Foto1SensorInformation.png">
+			<p class="card-text"></p>
+		  </div>
+		</div>
+		<center>
+		<th>
+              <div class="btn-group " role="group">
+                <button type="button" class="btn btn-sm" data-toggle="tooltip" title="edit">Edit
+                  <i class="fas fa-edit"></i>
+				</button>
+				
+                <button type="button" class="btn btn-sm " data-toggle="tooltip" title="delete">Delete
+                  <i class="fas fa-trash"></i>
+                </button>
+              </div>
+        </th>
+		</center>
+	  </div>	  
+</div>
+
+		
+	
+  
+<div class="row col-md-auto justify-content-center">
+    <div class="col-md-auto d-none d-ml-auto"></div>
+    <div class="col-md-auto">
+
+	<div class="media-body">
+	
+	</br></br></br>
+	
+	
+	
+	
+                            </br></br></br></br>
+							
+							
+	
+  </div>                      
+</div>     
+	
+  </div>                      
+</div>          
+
+</br>
+
+  <footer class="page-footer bg-dark pt-4" with=100%>
+
+    <div class="container">
+      <div class="footer-copyright text-center py-2"><a href="#">Seismology - 2020</a>
+      </div>
+    </div>
+
+  </footer>
+</body>
+
+</html>
