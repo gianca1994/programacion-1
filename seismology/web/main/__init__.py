@@ -10,6 +10,6 @@ def create_app():
 
     from .routes import main, verifseism
     app.register_blueprint(routes.main.main)
-    app.register_blueprint(routes.verifseism.verified_seism)
+    app.register_blueprint(routes.verifseism.verifseism)
 
     return app
