@@ -1,4 +1,4 @@
-Bienvenido {{professor.firstname}} {{professor.lastname}}!
+Bienvenido {{User.email}}!
 
 Gracias por registrarte en nuestro sistema.
 

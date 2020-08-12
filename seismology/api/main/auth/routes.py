@@ -4,6 +4,11 @@ from flask import request, Blueprint
 from flask_jwt_extended import create_access_token
 from main.mail.functions import sendMail
 from main.auth.decorators import admin_required
+# pip install fpdf
+from fpdf import FPDF
+# pip install reportlab
+from reportlab.pdfgen.canvas import Canvas
+
 
 # Utilizamos Blueprint para generar rutas y lo almacenamos en la variable auth
 auth = Blueprint('auth', __name__, url_prefix='/auth')
@@ -36,7 +41,7 @@ def login():
 # Register eliminado, porque estabamos duplicando la misma accion...
 
 
-# La función integrada nos permitirá definir la ruta para el checkeo y el metodo GET, lectura.
+    # La función integrada nos permitirá definir la ruta para el checkeo y el metodo GET, lectura.
 @auth.route("/checksensors", methods=["GET"])
 # La función integrada nos permitirá decir que solo los admins pueden ingresar a esta seccion.
 @admin_required
@@ -48,11 +53,50 @@ def checkStatus():
     if sensors:
         # Alojamos en la variable admins, los usuarios traidos de la db, filtrados por "admin"
         admins = db.session.query(UserModel).filter(UserModel.admin == True).all()
+
         if admins:
             adminList = [admin.email for admin in admins]
+
+            # Almacenar la lista de sensores desactivados en una variable..
+            # Tengo que escribir un nuevo archivo .pdf en el cual, su contenido sera la variable definida...
+
+            # OPCION 1
+            # Pip install fpdf
+            # Importamos FPDF de fpdf para crear el archivo.pdf
+            #from fpdf import FPDF
+            # Primero crearemos nuestro archivo PDF, usando la biblioteca FṔDF
+            # Creamos la variable y guardamos la clase FPDF()
+            SensorsListpdf = FPDF()
+            # Agregamos una pagina al archivo pdf, para poder almacenar la lista de sensores
+            SensorsListpdf.add_page()
+            # Elegimos el tipo de letra y tamaño
+            SensorsListpdf.set_font("Arial", size=12)
+            # Me faltaria agregar la lista de los sensores fallando al archivo...
+            SensorsDesactivated = jsonify({"sensors": [sensor.to_json() for sensor in sensors]})
+            SensorsListpdf.cell(SensorsDesactivated)
+            # Guardamos la informacion con output en el archivo.pdf
+            SensorsListpdf.output('SensorList.pdf')
+            # Adjuntar el archivo.PDF
+            attach(filename=SensorList, content_type=application/pdf, data=SensorsList, disposition=None, headers=None)
+
+            # OPCION 2
+            # pip install reportlab
+            # from reportlab.pdfgen.canvas import Canvas
+            # Creamos el archivo PDF con canvas y lo almacenamos en la variable
+            SensorsList=Canvas('SensorList.pdf')
+            # Escribimos la variable con los datos de los sensores
+            SensorsDesactivated=jsonify({"sensors": [sensor.to_json() for sensor in sensors]})
+            SensorsList.drawString(0, 0,SensorsDesactivated)
+            # Guardamos los datos de los sensores en el archivo..
+            SensorsList.save()
+            # Adjuntamos la variable al email
+            msg.attach(filename=SensorsList, content_type=application/pdf, data=sensors, disposition=None, headers=None)
+
+            # Enviamos el email con el archivo adjunto
             sendMail(adminList, "Deactivated sensors", "mail/sensor", sensorList=sensors)
+
         # Nos retorna los datos del sensor
-        return jsonify({"sensors": [sensor.to_json() for sensor in sensors]})
+        return "There're no sensors", 200
     else:
         return "There're no deactivated sensors", 200
 
