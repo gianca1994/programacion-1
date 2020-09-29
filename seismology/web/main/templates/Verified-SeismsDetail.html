@@ -1,0 +1,86 @@
+{% extends "main.html" %}
+
+{% block content %}
+
+<div class="media">
+
+  <div class="row col-md-auto justify-content-center">
+    <div class="col-md-auto d-none d-ml-auto"></div>
+    <div class="col-md-auto">
+
+      <div class="card text-center">
+        <div class="card-header">
+          <ul class="nav nav-pills card-header-pills">
+            <li class="nav-item">
+              <a class="nav-link active bg-dark" href="#">Description</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="#">Contact the seismologist</a>
+            </li>
+          </ul>
+        </div>
+        <div class="card-body">
+          <h5 class="card-title">Seism {{verified_seism.id}}</h5>
+          <p class="card-text">
+
+          <table class="table">
+            <thead class="thead-dark">
+            <tr>
+
+              <th class="bg-dark text-white" scope="row">Earthquake Data</th>
+              <th scope="col">Data</th>
+              <th class="bg-dark text-white" scope="row">Action:</th>
+
+              <td>
+                <div class="btn-group" role="group">
+                  <button type="button" class="btn btn-sm" data-toggle="tooltip" title="edit">Edit
+                    <i class="fas fa-edit"></i>
+                  </button>
+                  <button type="button" class="btn btn-sm " data-toggle="tooltip" title="delete">Delete
+                    <i class="fas fa-trash"></i>
+                  </button>
+                </div>
+              </th> </td>
+
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+              <th class="bg-dark text-white" scope="row">Date Time</th>
+              <td>{{verified_seism.datetime}}</td>
+
+            </tr>
+            <tr>
+              <th class="bg-dark text-white" scope="row">Depth</th>
+              <td>{{verified_seism.depth}}</td>
+
+            </tr>
+            <tr>
+              <th class="bg-dark text-white" scope="row">Magnitude</th>
+              <td>{{verified_seism.magnitude}}</td>
+            </tr>
+            <tr>
+              <th class="bg-dark text-white" scope="row">Latitude</th>
+              <td>{{verified_seism.latitude}}</td>
+
+            </tr>
+            <tr>
+              <th class="bg-dark text-white" scope="row">Longitude</th>
+              <td>{{verified_seism.longitude}}</td>
+
+            </tr>
+            <tr>
+              <th class="bg-dark text-white" scope="row">Sensor</th>
+              <td>{{verified_seism.sensorId}}</td>
+            </tr>
+            </tbody>
+          </table>
+          </p>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-auto d-none d-md-block thead-dark"></div>
+  </div>
+</div>
+</div>          
+{% endblock %}

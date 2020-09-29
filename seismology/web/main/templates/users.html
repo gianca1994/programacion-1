@@ -3,36 +3,41 @@
 {% import "macros.html" as macro %}
 
 {% block content %}
+
 <main>
     <div class="row justify-content-center">
         <div class="col-md-auto d-none d-md-block"></div>
-
-        <h2 class="text-uppercase text-center text-white mb-0">{{title}}</h2>
-        <hr class="bg-white mb-5"/>
-
         <div class="col-md-auto">
+
+            <h2 class="text-uppercase text-center text-white mb-0">{{title}}</h2>
+            <hr class="bg-white mb-5"/>
+
             <table class="table table-bordered table-responsive">
+                <caption>
+                    <a name="newUser" id="newUser" class="btn btn-success" href="{{ url_for(" user.create") }}" role="button">Create</a>
+                </caption>
+
                 <thead class="thead-dark">
                 <tr>
                     <th scope="col">ID</th>
-                    <th scope="col">Name</th>
-                    <th scope="col">Status</th>
-                    <th scope="col">Active</th>
-                    <th scope="col">User Associated</th>
+                    <th scope="col">Email</th>
+                    <th scope="col">Admin</th>
                     <th scope="col">Actions</th>
                 </tr>
                 </thead>
 
                 <tbody>
-                {% for sensor in sensors %}
-                {{ macro.show_sensor(sensor) }}
-                {% endfor %}
+                  {% for user in users %}
+                  {{ macro.show_user(user) }}
+                  {% endfor %}
                 </tbody>
             </table>
         </div>
         <div class="col-md-auto d-none d-md-block thead-dark"></div>
     </div>
+
     <br>
+
     <nav aria-label="...">
         <ul class="pagination justify-content-center">
             <li class="page-item disabled">

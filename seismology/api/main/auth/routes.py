@@ -4,6 +4,7 @@ from flask import request, Blueprint
 from flask_jwt_extended import create_access_token
 from main.mail.functions import sendMail
 from main.auth.decorators import admin_required
+
 # pip install fpdf
 from fpdf import FPDF
 # pip install reportlab

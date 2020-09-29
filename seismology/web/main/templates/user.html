@@ -1,0 +1,38 @@
+{% extends "main.html" %}
+
+{% import "macros.html" as macro %}
+
+{% block content %}
+<div class="row justify-content-center">
+  <div class="col-md-auto d-none d-md-block"></div>
+    <div class="col-md-auto">
+      <table class="table table-bordered table-responsive">
+        <thead class="thead-dark">
+          <tr>
+            <th scope="col">ID</th>
+            <th scope="col">Email</th>
+            <th scope="col">Admin</th>
+            <th scope="col">Password</th>
+            <th scope="col">Actions</th>
+          </tr>
+        </thead>
+
+        <tbody>
+          <tr>
+            <td>{{user.id}}</td>
+            <td>{{user.email}}</td>
+            <td>{{user.admin}}</td>
+            <td>{{user.password}}</td>
+            <td>
+              <div class="row justify-content-center">
+                  <a name="modify" class="btn btn-success mx-auto" href="{{url_for("user.edit",id=user.id)}}" role="button">Modify</a>
+                  <a name="delete" class="btn btn-danger mx-auto" href="{{url_for("user.delete",id=user.id)}}" role="button">Delete</a>
+              </div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  <div class="col-md-auto d-none d-md-block thead-dark"></div>
+</div>
+{% endblock %}

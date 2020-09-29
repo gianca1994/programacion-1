@@ -1,0 +1,60 @@
+{% extends "main.html" %}
+
+{% import "macros.html" as macro %}
+
+{% block content %}
+<div class="media justify-content-center">
+  <div class="row col-md-auto justify-content-center">
+    <div class="col-md-auto d-none d-ml-auto"></div>
+    <div class="col-md-auto ">
+      <div class="card text-center">
+        <div class="card-body">
+          <h5 class="card-title">Seism {{unverified_seism.id}}</h5>
+          <p class="card-text">
+          <table class="table">
+            <thead class="thead-dark">
+            <tr>
+              <th class="bg-dark text-white" scope="row">Earthquake Data</th>
+              <th scope="col">Data</th>
+            </tr>
+            </thead>
+
+            <tbody>
+            <tr>
+              <th class="bg-dark text-white" scope="row">Date Time</th>
+              <td>{{unverified_seism.datetime}}</td>
+
+            </tr>
+            <tr>
+              <th class="bg-dark text-white" scope="row">Depth</th>
+              <td>{{unverified_seism.depth}}</td>
+            </tr>
+            <tr>
+              <th class="bg-dark text-white" scope="row">Magnitude</th>
+              <td>{{unverified_seism.magnitude}}</td>
+            </tr>
+            <tr>
+              <th class="bg-dark text-white" scope="row">Latitude</th>
+              <td>{{unverified_seism.latitude}}</td>
+
+            </tr>
+            <tr>
+              <th class="bg-dark text-white" scope="row">Longitude</th>
+              <td>{{unverified_seism.longitude}}</td>
+
+            </tr>
+            <tr>
+              <th class="bg-dark text-white" scope="row">Sensor</th>
+              <td>{{unverified_seism.sensorId}}</td>
+            </tr>
+
+            </tbody>
+          </table>
+          </p>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-auto d-none d-md-block thead-dark"></div>
+  </div>
+</div>
+

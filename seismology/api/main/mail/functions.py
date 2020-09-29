@@ -8,14 +8,9 @@ from smtplib import SMTPException
 def sendMail(to,subject, template, adj, **kwargs):
     # Definimos un mensaje con el objeto "Message" del flask_mail, le pasamos el asunto, quien lo envia y receptores
     msg = Message(subject, sender=current_app.config["FLASKY_MAIL_SENDER"], recipients=[to])
-
-
-
-    try:.
-
+    try:
         # Definimos body (texto plano) y html (estilo con css) dependiendo del soporte del cliente de correo usa uno u otro.
         msg.body = render_template(template + ".txt", **kwargs)
-        
         msg.html = render_template(template + ".html", **kwargs)
 
         # Envia el mensaje
@@ -23,5 +18,6 @@ def sendMail(to,subject, template, adj, **kwargs):
 
     # En caso de salir un error SMTP (error de autenticacion o fallo al conectar al servidor)
     except SMTPException as error:
+        print(str(error))
         return "Mail deliver failed" + str(error)
     return True

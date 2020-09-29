@@ -35,8 +35,7 @@ class Seism(db.Model):
     # Creamos la funcion __repr__ que nos mostrara los datos de cada seism que carguemos.
     def __repr__(self):
         # Nos devuelve un seism con 6 atributos.
-        return '<Seism: %r %r %r %r %r %r >' % (
-            self.datime, self.magnitude, self.latitude, self.longitude, self.depth, self.verified)
+        return '<Seism: %r %r %r %r %r %r >' % (self.datime, self.magnitude, self.latitude, self.longitude, self.depth, self.verified)
 
     # Para convertir un obj a JSON, primero definimos "to_json".
     def to_json(self):

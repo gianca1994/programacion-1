@@ -1,7 +1,9 @@
 {% extends "main.html" %}
 
+<!-- Importar el archivo de macros -->
 {% import "macros.html" as macro %}
 
+<!-- Define el contenido -->
 {% block content %}
 <main>
   <div class="row justify-content-center">
@@ -25,13 +27,10 @@
         </tr>
 
         </thead>
-
         <tbody>
-
-        {% for verified_seism in verified_seisms %}
-        {{ macro.show_verified_seism(verified_seism) }}
+        {% for unverified_seism in unverified_seisms %}
+        {{ macro.show_unverified_seism(unverified_seism) }}
         {% endfor %}
-
         </tbody>
       </table>
     </div>

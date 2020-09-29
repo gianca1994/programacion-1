@@ -26,4 +26,4 @@ def user_identity_lookup(user):
 
 @jwt.user_claims_loader
 def add_claims_to_access_token(user):
-    return {"admin": user.admin}
+    return {"id": user.id, "email": user.email, "admin": user.admin,}

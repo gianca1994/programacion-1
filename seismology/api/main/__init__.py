@@ -6,6 +6,7 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_jwt_extended import JWTManager
 from flask_mail import Mail
 
+
 api = Api()
 # Variable utilizada para hacer todas las consultas...
 db = SQLAlchemy()
