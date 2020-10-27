@@ -43,16 +43,24 @@ class VerifSeisms(Resource):
         # Aca analizamos los datos y filtramos los Seisms verificados de la coleccion,"verified == True".
         seisms = db.session.query(SeismModel).filter(SeismModel.verified == True)
 
-        try:
+        if request.get_json():
             filter = request.get_json().items()
 
             # Definimos "for" para los filtros en las consultas...
             for key, value in filter:
+
+                if key == "datetime":
+                    seisms = seisms.filter(SeismModel.datetime == value)
+                if key == "datetimeFrom":
+                    seisms = seisms.filter(SeismModel.datetime >= value)
+                if key == "datetimeTo":
+                    seisms = seisms.filter(SeismModel.datetime <= value)
+
                 if key == "sensorId":
                     seisms = seisms.filter(SeismModel.sensorId == value)
-                if key == "datetime":
-                    seisms = seisms.filter(SeismModel.dt.like('%' + value + '%'))
-                if key == "magnitude":
+                if key == "magnitudeMax":
+                    seisms = seisms.filter(SeismModel.magnitude <= value)
+                if key == "magnitudeMin":
                     seisms = seisms.filter(SeismModel.magnitude == value)
                 if key == "sensor.name":
                     seisms = seisms.join(SeismModel.sensor).filter(SensorModel.name.like('%' + value + '%'))
@@ -204,37 +212,62 @@ class UnverifSeisms(Resource):
         perpage = 100
 
         # Traemos la coleccion de seisms, pero filtramos los seism verificados.
-        filters = request.get_json().items()
+
         seisms = db.session.query(SeismModel).filter(SeismModel.verified == False)
-        current_user_id = get_jwt_identity()
-        seisms = seisms.join(SeismModel.sensor).filter(SensorModel.userId == current_user_id)
 
-        # Utilizamos un FOR para recorrer el diccionario y evalua el contenido alojado en filters.
-        for key, value in filters:
-            # Utilizamos condicionales para filtrar por partes...
-            if key == "sensorId":
-                seisms = seisms.filter(SeismModel.sensorId == value)
+        if request.get_json():
+            filters = request.get_json().items()
 
-            # ORDENAMIENTO
-            # Utilizamos sort_by para ordenar todo de mayor a menor.
-            if key == "sort_by":
-                if value == "datime":
-                    seisms = seisms.order_by(SeismModel.dt)
-                # Se agrega datetime.desc para realizar el ordenamiento y se almacena en la variable.
-                if value == "datetime.desc":
-                    seisms = seisms.order_by(SeismModel.dt.desc())
+            # Utilizamos un FOR para recorrer el diccionario y evalua el contenido alojado en filters.
+            for key, value in filters:
+                # Utilizamos condicionales para filtrar por partes...
+                if "datetime" in filters:
+                    seisms = seisms.filter(SeismModel.datetime == value)
+                if key == "datetimeFrom":
+                    seisms = seisms.filter(SeismModel.datetime >= value)
+                if key == "datetimeTo":
+                    seisms = seisms.filter(SeismModel.datetime <= value)
+                if key == "sensorId":
+                    seisms = seisms.filter(SeismModel.sensorId == value)
+                if key == "magnitude":
+                    seisms = seisms.filter(SeismModel.magnitude == value)
+                if key == "depth":
+                    seisms = seisms.filter(SeismModel.depth == value)
 
-            # Definimos los if dentro de for para la paginacion de sismos no verificados mostrados por pagina.
-            if key == "page":
-                page = value
-            if key == "per_page":
-                perpage = value
+                # ORDENAMIENTO
+                # Utilizamos sort_by para ordenar todo de mayor a menor.
+                if key == "sort_by":
+                    if value == "datime":
+                        seisms = seisms.order_by(SeismModel.dt)
+                    # Se agrega datetime.desc para realizar el ordenamiento y se almacena en la variable.
+                    if value == "datetime.desc":
+                        seisms = seisms.order_by(SeismModel.dt.desc())
+                    if value == "sensorname":
+                        seisms = seisms.join(SeismModel.sensor).order_by(SensorModel.name.asc())
+                    if value == "sensorname.desc":
+                        seisms = seisms.join(SeismModel.sensor).order_by(SensorModel.name.desc())
+
+                    if value == "magnitude":
+                        seisms = seisms.order_by(SeismModel.magnitude.asc())
+                    if value == "magnitude.desc":
+                        seisms = seisms.order_by(SeismModel.magnitude.desc())
+                    if value == "depth":
+                        seisms = seisms.order_by(SeismModel.depth.asc())
+                    if value == "depth.desc":
+                        seisms = seisms.order_by(SeismModel.depth.desc())
+
+                # Definimos los if dentro de for para la paginacion de sismos no verificados mostrados por pagina.
+                if key == "page":
+                    page = int(Value)
+                if key == "per_page":
+                    perpage = int(value)
 
         # Alojamos en la variable seisms, todos los sismos obtenidos de las paginas.
         seisms = seisms.paginate(page, perpage, True, 100)
 
         # Nos devuelve la coleccion con los seisms no verificados filtrados.
-        return jsonify({"Unverif-seisms": [seism.to_json() for seism in seisms.items]})
+        return jsonify({"Unverif-seisms": [seism.to_json() for seism in seisms.items], "total": seisms.total, "pages": seisms.pages,
+                        "page": page})
 
     @jwt_required
     # Definimos "POST" para agregar un seisms no verificado a la coleccion.

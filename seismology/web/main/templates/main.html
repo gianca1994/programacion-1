@@ -1,138 +1,128 @@
+{% from "form_macros.html" import show_field, show_submit, show_placeholder %}
 <!DOCTYPE html>
 <html lang="es">
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{{title}}</title>
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>{{title}}</title>
 
-    {% block head %}
-    <!-- Style CSS -->
-    <link rel="stylesheet" href="style.css" type="text/css">
-    <!-- CSS only -->
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css"
-          integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
-    {% endblock %}
+        {% block head %}
+          <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css">
+          <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+        {% endblock %}
+    </head>
 
-</head>
+    <body>
 
-<body>
-
-{% block scripts %}
-<!-- JS, Popper.js, and jQuery -->
-<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"
-        integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj"
-        crossorigin="anonymous"></script>
-<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
-        integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo"
-        crossorigin="anonymous"></script>
-<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"
-        integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI"
-        crossorigin="anonymous"></script>
-<!-- Font Awesome -->
-<script src="https://kit.fontawesome.com/ec398cbdc7.js" crossorigin="anonymous"></script>
-{% endblock %}
+        {% block scripts %}
+          <script src="https://kit.fontawesome.com/ec398cbdc7.js"></script>
+          <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+          <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"></script>
+          <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"></script>
+        {% endblock %}
 
 
-{% block menu %}
-<!-- Header -->
-<header>
-    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-        <a class="navbar-brand" href="#">Seismology</a>
+        {% block menu %}
+            <header>
+                <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+                    <a class="navbar-brand" href="{{url_for('main.index')}}">Seismology</a>
 
-        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
-                aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-
-
-        <div class="collapse navbar-collapse" id="navbarSupportedContent">
-            <div class="navbar-nav mr-auto">
-                <a class="nav-item nav-link active" href="#">Verfied-Seisms <span class="sr-only">(current)</span></a>
-
-                {% if current_user.admin %}
-                <a class="nav-item nav-link" href="#">Sensors</a>
-                <a class="nav-item nav-link" href="#">Users</a>
-                {% endif %}
-            </div>
-
-            {% if current_user.is_authenticated %}
-            <div class="navbar-nav text-light ml-auto">
-
-                <a class="nav-item nav-link" href="#"><i>Logged in, {{ current_user.email.split("@")[0] }}</i></a>
-                <a class="nav-item nav-link" href="#"><i>Log Out</i></a>
-                <a class="nav-item nav-link" href="#"><i class="fas fa-user"></i></a>
-                <a class="nav-item nav-link" href="#"><i class="fas fa-house-user"></i></a>
-                <a class="nav-item nav-link" href="#"><i class="fas fa-database"></i></a>
-            </div>
-            {% else %}
-            .....
-            ........
-            ..............
-            {% endif %}
-        </div>
-    </nav>
-</header>
-{% endblock %}
-
-
-</br></br>
-
-{% block breadcrumbs %}
-<nav aria-label="breadcrumb">
-    <ol class="breadcrumb bg-dark">
-        {% for breadcrumb in breadcrumbs %}
-        <li class="breadcrumb-item">
-            {% if not loop.last %}
-            <a class="text-light" href="{{ breadcrumb.url }}">{{ breadcrumb.text }}</a>
-            {% else %}
-            {{ breadcrumb.text }}
-            {{ "/" if not loop.last }}
-            {% endif %}
-        </li>
-        {% endfor %}
-    </ol>
-</nav>
-{% endblock %}
-
-{% block flash %}
-<div class="container-fluid">
-    <div style="position: relative">
-        <div style="position: absolute; top: 0; right: 0;">
-            <div class="col-auto mx-auto">
-                {% with messages = get_flashed_messages(with_categories=true) %}
-                {% if messages %}
-                {% for category, message in messages %}
-                <div class="alert alert-{{category}} alert-dismissible fade show" role="alert">
-                    {{ message }}
-                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
+                    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+                            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                        <span class="navbar-toggler-icon"></span>
                     </button>
+
+                    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                        <div class="navbar-nav mr-auto">
+                            <a class="nav-item nav-link active" href="{{url_for('verified_seism.index')}}">Verfied-Seisms</a>
+                            {% if current_user.is_authenticated %}
+                                {% if current_user.admin %}
+                                    <a class="nav-item nav-link" href="{{url_for('sensor.index')}}">Sensors</a>
+                                    <a class="nav-item nav-link" href="{{url_for('user.index')}}">Users</a>
+                                {% endif %}
+                            {% endif %}
+
+                            {% if current_user.is_authenticated %}
+                                <div class="navbar-nav text-light ml-auto">
+                                    <a class="nav-item nav-link" href="#"><i>Logged in, {{ current_user.email }}</i></a>
+                                    <a class="nav-item nav-link" href="{{ url_for('main.logout') }}"><i>Log Out</i></a>
+                                </div>
+                            {% else %}
+                                <form class="form-inline" method="POST" action="{{ url_for('main.login') }}">
+                                    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                                    <div class="form-row">
+                                        <div class="form-group col-md-5">
+                                            {{ show_placeholder(loginForm.email, class="form-control mr-sm-2") }}
+                                        </div>
+                                        <div class="form-group col-md-5">
+                                            {{ show_placeholder(loginForm.password, class="form-control") }}
+                                        </div>
+                                        <div class="form-group col-md-2">
+                                            {{ show_submit(loginForm.submit, class="btn btn-success") }}
+                                        </div>
+                                    </div>
+                                </form>
+                            {% endif %}
+                        </div>
+                    </div>
+                </nav>
+            </header>
+        {% endblock %}
+
+
+        {% block breadcrumbs %}
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb bg-dark">
+                    {% for breadcrumb in breadcrumbs %}
+                        <li class="breadcrumb-item">
+                            {% if not loop.last %}
+                                <a class="text-light" href="{{ breadcrumb.url }}">{{ breadcrumb.text }}</a>
+                            {% else %}
+                                {{ breadcrumb.text }}
+                                {{ "/" if not loop.last }}
+                            {% endif %}
+                        </li>
+                    {% endfor %}
+                </ol>
+            </nav>
+        {% endblock %}
+
+        {% block flash %}
+            <div class="container-fluid">
+                <div style="position: relative">
+                    <div style="position: absolute; top: 0; right: 0;">
+                        <div class="col-auto mx-auto">
+                            {% with messages = get_flashed_messages(with_categories=true) %}
+                                {% if messages %}
+                                    {% for category, message in messages %}
+                                        <div class="alert alert-{{category}} alert-dismissible fade show" role="alert">
+                                            {{ message }}
+                                            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                                <span aria-hidden="true">&times;</span>
+                                            </button>
+                                        </div>
+                                    {% endfor %}
+                                {% endif %}
+                            {% endwith %}
+                        </div>
+                    </div>
                 </div>
-                {% endfor %}
-                {% endif %}
-                {% endwith %}
             </div>
-        </div>
-    </div>
-</div>
-{% endblock %}
+        {% endblock %}
 
-<main>
-    {% block content %}
+        <main>
+            {% block content %}
+            {% endblock %}
+        </main>
 
-    {% endblock %}
-</main>
-
-{% block footer %}
-<footer class="page-footer bg-dark pt-4" with=100%>
-
-    <div class="container">
-        <div class="footer-copyright text-center py-2"><a href="#">Copyright - Seismology 2020</a>
-        </div>
-    </div>
-</footer>
-{% endblock %}
-
-</body>
+        {% block footer %}
+            <footer class="page-footer bg-dark pt-4" with=100%>
+                <div class="container">
+                    <div class="footer-copyright text-center py-2"><a href="#">Copyright - Seismology 2020</a>
+                    </div>
+                </div>
+            </footer>
+        {% endblock %}
+    </body>
 </html>

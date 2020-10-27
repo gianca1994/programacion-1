@@ -13,11 +13,27 @@ user = Blueprint("user", __name__, url_prefix="/user")
 @admin_required
 @register_breadcrumb(user, ".", "Users")
 def index():
-    r = sendRequest(method="get", url="/users", auth=True)
-    users = json.loads(r.text)["Users"]
-    title = "Users List"
 
-    return render_template("users.html", title=title, users=users)
+    fact={}
+    if "page" in request.args:
+        fact["page"] = request.args.get("page", "")
+    else:
+        if "page" in fact:
+            del fact["page"]
+
+    r = sendRequest(method="get", url="/users", auth=True, data = json.dumps(fact))
+
+    if r.status_code != 200:
+        return redirect(url_for("user.index"))
+    else:
+        users = json.loads(r.text)["Users"]
+        paginate = {}
+        paginate["total"] = json.loads(r.text)["total"]
+        paginate["pages"] = json.loads(r.text)["pages"]
+        paginate["current_page"] = json.loads(r.text)["page"]
+        title = "Users List"
+        return render_template("users.html", title=title, users=users, pagination=paginate)
+
 
 @user.route("/view/<int:id>")
 @login_required
@@ -83,9 +99,6 @@ def edit(id):
 @login_required
 @admin_required
 def delete(id):
-    url = current_app.config["API_URL"]+"/user/"+str(id)
-    r = requests.delete(url, headers={"content-type":"application/json"})
     r = sendRequest(method="delete", url="/user/"+str(id), auth=True)
     flash("User deleted","danger")
-
     return redirect(url_for("user.index"))

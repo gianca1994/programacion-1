@@ -1,7 +1,9 @@
 from .user import User as UserResource
 from .user import Users as UsersResource
+from .user import UsersInfo as UsersInfoResource
 from .sensor import Sensor as SensorResource
 from .sensor import Sensors as SensorsResource
+from .sensor import SensorsInfo as SensorsInfoResource
 from .seism import VerifSeism as VerifSeismResource
 from .seism import UnverifSeism as UnverifSeismResource
 from .seism import VerifSeisms as VerifSeismsResource

@@ -25,8 +25,7 @@ class Sensor(db.Model):
     def __repr__(self):
 
         # Nos devuelve un sensor con 5 atributos.
-        return '<Sensor: %r %r %r %r %r >' % (
-            self.name, self.ip, self.port, self.status, self.active)
+        return '<Sensor: %r %r %r >' % (self.name, self.ip, self.port)
 
     # Para convertir un obj a JSON, primero definimos "to_json".
     def to_json(self):
@@ -37,14 +36,12 @@ class Sensor(db.Model):
         # Realiza la operacion
         try:
             sensor_json = {'id': self.id, 'name': (self.name), 'ip': (self.ip), 'port': self.port,
-                           'status': self.status, 'active': self.active, 'user': self.user.to_json()
-                           }
+                           'status': self.status, 'active': self.active, 'user': self.user.to_json()}
 
         # Si algo pasa o ocurre mal...
         except:
             sensor_json = {'id': self.id, 'name': self.name, 'ip': self.ip, 'port': self.port, 'status': self.status,
-                           'active': self.active, 'userId': self.userId
-                           }
+                           'active': self.active, 'userId': self.userId}
 
         # Devolvemos la variable con los valores asignados.
         return sensor_json
@@ -64,3 +61,7 @@ class Sensor(db.Model):
 
         # Devolvemos el Sensor con todos los argumentos en forma de OBJETO
         return Sensor(id=id, name=name, ip=ip, port=port, status=status, active=active, userId=userId)
+
+    def to_json_public(self):
+        sensor_json = {"id": self.id, "name": str(self.name)}
+        return sensor_json

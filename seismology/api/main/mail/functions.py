@@ -5,7 +5,7 @@ from smtplib import SMTPException
 
 # Definimos sendMail con las variables: to (destinatario), subject (asunto), template (ubicacion y nombre del
 # template del mail) y **kwargs (serie de argumentos).
-def sendMail(to,subject, template, adj, **kwargs):
+def sendMail(to,subject, template, **kwargs):
     # Definimos un mensaje con el objeto "Message" del flask_mail, le pasamos el asunto, quien lo envia y receptores
     msg = Message(subject, sender=current_app.config["FLASKY_MAIL_SENDER"], recipients=[to])
     try:

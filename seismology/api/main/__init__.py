@@ -60,6 +60,7 @@ def create_app():
     api.add_resource(resources.VerifSeismsResource, '/verif-seisms')
     api.add_resource(resources.UnverifSeismResource, '/unverif-seisms/<id>')
     api.add_resource(resources.UnverifSeismsResource, '/unverif-seisms')
+    api.add_resource(resources.UsersInfoResource, "/users-info")
 
     app.config["MAIL_HOSTNAME"] = os.getenv("MAIL_HOSTNAME")
     app.config["MAIL_SERVER"] = os.getenv("MAIL_SERVER")

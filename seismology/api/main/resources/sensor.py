@@ -81,29 +81,24 @@ class Sensors(Resource):
         # Definimos "perpage" para decir cuantos sensores mostrara cada pagina.
         perpage = 10
 
-        # Filtraremos el/los sensores a mostrar "request.get_json().items()" y los almacenaremos en la variable.
-        filters = request.get_json().items()
         # Traemos la coleccion de sensores de la db y la alojamos en la variable "sensors".
         sensors = db.session.query(SensorModel)
 
-        # Utilizamos un FOR para recorrer el diccionario y evalua el contenido alojado en filters.
-        for key, value in filters:
-            # Utilizamos condicionales para filtrar por partes...
-            if key == "userId[lte]":
-                sensors = sensors.filter(SensorModel.userId <= value)
-            if key == "userId[gte]":
-                sensors = sensors.filter(SensorModel.userId >= value)
-            if key == "userId":
-                sensors = sensors.filter(SensorModel.userId == value)
-            if key == "user":
-                if value:
-                    sensors = sensors.filter(SensorModel.userId != None)
-                else:
-                    sensors = sensors.filter(SensorModel.userId is None)
-                if key == "ip":
-                    sensors = sensors.filter(SensorModel.ip == value)
-                if key == "port":
-                    sensors = sensors.filter(SensorModel.port == value)
+        if request.get_json():
+            # Filtraremos el/los sensores a mostrar "request.get_json().items()" y los almacenaremos en la variable.
+            filters = request.get_json().items()
+
+            # Utilizamos un FOR para recorrer el diccionario y evalua el contenido alojado en filters.
+            for key, value in filters:
+                # Utilizamos condicionales para filtrar por partes...
+                if key == "name":
+                    sensors = sensors.filter(SensorModel.name.like("%" + value + "%"))
+                if key == "userId[lte]":
+                    sensors = sensors.filter(SensorModel.userId <= value)
+                if key == "userId[gte]":
+                    sensors = sensors.filter(SensorModel.userId >= value)
+                if key == "userId":
+                    sensors = sensors.filter(SensorModel.userId == value)
 
                 # Aca comienza el ordenamiento...
                 if key == "sort_by":
@@ -120,17 +115,18 @@ class Sensors(Resource):
                     if value == "status.desc":
                         sensors = sensors.order_by(SensorModel.status.desc())
 
-            # Definimos los if dentro de for para paginas y cantidad de sensores mostrados por pagina.
-            if key == "page":
-                page = value
-            if key == "perpage":
-                perpage = value
+                # Definimos los if dentro de for para paginas y cantidad de sensores mostrados por pagina.
+                if key == "page":
+                    page = int(value)
+                if key == "perpage":
+                    perpage = int(value)
 
-        # Alojamos en la variable sensors, todos los sensores obtenidos de las paginas.
-        sensors = sensors.paginate(page, perpage, True, 500)
+            # Alojamos en la variable sensors, todos los sensores obtenidos de las paginas.
+            sensors = sensors.paginate(page, perpage, True, 500)
 
-        # Nos devuelve la coleccion con los sensores filtrados.
-        return jsonify({"Sensors": [sensor.to_json() for sensor in sensors.items]})
+            # Nos devuelve la coleccion con los sensores filtrados.
+            return jsonify({"Sensors": [sensor.to_json() for sensor in sensors.items], "total": sensors.total,"pages": sensors.pages,
+                            "page": page})
 
     @admin_required
     # Definimos "POST" para agregar un sensor a la coleccion.
@@ -148,3 +144,9 @@ class Sensors(Resource):
         except Exception as error:
             # Nos retorna el error "400 (Solicitud incorrecta)"
             return str(error), 400
+
+class SensorsInfo(Resource):
+    # Obtenemos la lista de sensores que sera mostrado a los clientes no logueados
+    def get(self):
+        sensors = db.session.query(SensorModel)
+        return jsonify({"sensors": [sensor.to_json_public() for sensor in sensors]})

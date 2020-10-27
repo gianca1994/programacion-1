@@ -19,34 +19,40 @@ def index():
     r = sendRequest(method="get", url="/users", auth=True)
     filter.userId.choices = [(item['id'], item['email']) for item in json.loads(r.text)["Users"]]
     filter.userId.choices.insert(0, [0, 'All'])
-    data = {}
+    fact = {}
 
     if filter.validate():
         if filter.name.data != None:
-            data['name'] = filter.name.data
+            fact['name'] = filter.name.data
         if filter.status.data != None:
-            data['status'] = filter.status.data
+            fact['status'] = filter.status.data
         if filter.active.data != None:
-            data['active'] = filter.active.data
+            fact['active'] = filter.active.data
         if filter.userId.data != None and filter.userId.data != 0:
-            data['userId'] = filter.userId.data
-    if 'page' in request.args:
-        data['page'] = request.args.get('page', '')
-    if 'sort_by' in request.args:
-        data['sort_by'] = request.args.get('sort_by', '')
+            fact['userId'] = filter.userId.data
 
-    r = sendRequest(method="get", url="/sensors", data=json.dumps(data), auth=True)
+    if "page" in request.args:
+        fact["page"] = request.args.get("page", "")
+    else:
+        if "page" in fact:
+            del fact["page"]
+
+    if 'sort_by' in request.args:
+        fact['sort_by'] = request.args.get('sort_by', '')
+
+    r = sendRequest(method="get", url="/sensors", data=json.dumps(fact), auth=True)
 
     if (r.status_code == 200):
         sensors = json.loads(r.text)["sensors"]
-        pagination = {}
-        pagination['total'] = json.loads(r.text)['total']
-        pagination['pages'] = json.loads(r.text)['pages']
-        pagination['current_page'] = json.loads(r.text)['page']
+        paginate = {}
+        paginate['total'] = json.loads(r.text)['total']
+        paginate['pages'] = json.loads(r.text)['pages']
+        paginate['current_page'] = json.loads(r.text)['page']
         title = "Sensors"
 
-        return render_template("sensors.html", title=title, sensors=sensors, filter=filter, pagination=pagination)
+        return render_template("sensors.html", title=title, sensors=sensors, filter=filter, pagination=paginate)
     else:
+        flash("filtering error", "danger")
         redirect(url_for('main.logout'))
 
 
@@ -78,8 +84,8 @@ def create():
     form = SensorCreateForm()
     if form.validate_on_submit():
         sensor = {"name": form.name.data, "ip": form.ip.data, "port": form.port.data, "status": form.status.data, "active": form.active.data, "userId": form.userId.data}
-        data = json.dumps(sensor)
-        r = sendRequest(method="post", url="/sensors", data=data, auth=True)
+        fact = json.dumps(sensor)
+        r = sendRequest(method="post", url="/sensors", data=fact, auth=True)
 
         return redirect(url_for("sensor.index"))
     return render_template("sensorEdit_form.html", form=form)
@@ -93,9 +99,7 @@ def edit(id):
 
     form = SensorEditForm()
     req = sendRequest(method="get", url="/users", auth=True)
-    users = [(item['id'], item['email'])
-
-             for item in json.loads(req.text)["Users"]]
+    users = [(item['id'], item['email']) for item in json.loads(req.text)["Users"]]
     form.userId.choices = users
     form.userId.choices.insert(0, [0, 'Select one user'])
 
@@ -114,17 +118,14 @@ def edit(id):
         form.status.data = sensor["status"]
         form.active.data = sensor["active"]
 
-        try:
-            user = sensor["user"]
-            form.userId.data = [int(user_id)
-                                for user_id in users if user_id == int(user["id"])]
-        except KeyError:
-            pass
+        for user_id, user_email in users
+            if sensor["user"]["id"] == user_id:
+                form.userId.data = int(user_id)
 
     if form.validate_on_submit():
         sensor = {"name": form.name.data, "ip": form.ip.data, "port": form.port.data, "status": form.status.data, "active": form.active.data, "userId": form.userId.data}
-        data = json.dumps(sensor)
-        r = sendRequest(method="put", url="/sensor/" + str(id), data=data, auth=True)
+        fact = json.dumps(sensor)
+        r = sendRequest(method="put", url="/sensor/" + str(id), data=fact, auth=True)
         flash("Sensor edited", "success")
 
         return redirect(url_for("sensor.index"))

@@ -21,21 +21,10 @@ class Seism(db.Model):
     sensorId = db.Column(db.Integer, db.ForeignKey('sensor.id', ondelete='RESTRICT'), nullable=False)
     sensor = db.relationship('Sensor', back_populates='seisms', uselist=False, single_parent=True)
 
-    # La función integrada nos permitirá interceptar la escritura, lectura o borrado de los atributos...
-    @property
-    def dtb(self):
-        return self.datime
-
-    # Se encarga de interceptar cuando se escriba. (set = definir)
-    @dtb.setter
-    def setDT(self, value):
-        nwVal = dtdb.strptime(value, "%Y-%m-%d %H:%M:%S")
-        self.datime = nwVal
-
     # Creamos la funcion __repr__ que nos mostrara los datos de cada seism que carguemos.
     def __repr__(self):
         # Nos devuelve un seism con 6 atributos.
-        return '<Seism: %r %r %r %r %r %r >' % (self.datime, self.magnitude, self.latitude, self.longitude, self.depth, self.verified)
+        return '<Seism: %r %r %r %r >' % (self.magnitude, self.latitude, self.longitude, self.depth)
 
     # Para convertir un obj a JSON, primero definimos "to_json".
     def to_json(self):

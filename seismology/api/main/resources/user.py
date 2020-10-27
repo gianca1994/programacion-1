@@ -88,3 +88,10 @@ class Users(Resource):
 
             # Nos devuelve el usuario AGREGADO con un codigo "201 (CREADO!!)".
             return user.to_json(), 201
+
+class UsersInfo(Resource):
+    # Obtenemos la lista de los recursos
+    def get(self):
+        users = db.session.query(UserModel)
+        # Devolvemos la misma, con un formato publico, para los users que no estan logueados...
+        return jsonify({"Users": [user.to_json_public() for user in users]})

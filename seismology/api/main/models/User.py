@@ -36,12 +36,12 @@ class User(db.Model):
     # Creamos la funcion __repr__ que nos mostrara los datos de cada user que carguemos.
     def __repr__(self):
         # Nos devuelve un usuario con 3 atributos.
-        return '<User: %r %r %r >' % (self.id, self.email, self.admin)
+        return '<User: %r %r >' % (self.id, self.email)
 
     # Para convertir un obj a JSON, primero definimos "to_json".
     def to_json(self):
         # Creamos una variable en este caso llamada "user_json" a la que le asignaremos los valores de: id y email.
-        user_json = {'id': self.id, 'email': str(self.email)}
+        user_json = {'id': self.id, 'email': str(self.email), "admin": self.admin}
 
         # Devolvemos la variable con los valores asignados.
         return user_json
@@ -56,3 +56,7 @@ class User(db.Model):
 
         # Devolvemos el usuario con todos los argumentos en forma de OBJETO
         return User(id=id, plain_password=password, email=email, admin=admin)
+
+    def to_json_public(self):
+        user_json = {"id": self.id, "email": str(self.email)}
+        return user_json
