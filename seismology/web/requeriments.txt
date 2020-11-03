@@ -1,8 +1,9 @@
 flask
 python-dotenv
 requests
-flask_breadcrumbs
 PyJWT
 email_validator
 flask-login
 flask-restful
+Flask_Breadcrumbs
+Flask_WTF

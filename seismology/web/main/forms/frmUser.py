@@ -3,6 +3,7 @@ from wtforms import PasswordField,SubmitField, BooleanField
 from wtforms.fields.html5 import EmailField
 from wtforms import validators
 
+
 # Clase definida para crear un nuevo usuario
 class UserCreateForm(FlaskForm):
 

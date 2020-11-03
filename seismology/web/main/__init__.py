@@ -3,6 +3,7 @@ from flask import Flask, flash, redirect, url_for
 from dotenv import load_dotenv
 from flask_breadcrumbs import Breadcrumbs
 from flask_login import LoginManager
+
 login_manager = LoginManager()
 
 @login_manager.unauthorized_handler
