@@ -3,7 +3,6 @@ from flask import Flask, flash, redirect, url_for
 from dotenv import load_dotenv
 from flask_breadcrumbs import Breadcrumbs
 from flask_login import LoginManager
-
 login_manager = LoginManager()
 
 @login_manager.unauthorized_handler
@@ -23,9 +22,11 @@ def create_app():
     login_manager.init_app(app)
 
     # Blueprints
+    from .routes import main, verifseism, unverifseism, user, sensor
+
     app.register_blueprint(routes.main.main)
-    app.register_blueprint(routes.verified_seism.verified_seism)
-    app.register_blueprint(routes.unverified_seism.unverified_seism)
+    app.register_blueprint(routes.verifseism.verifseism)
+    app.register_blueprint(routes.unverifseism.unverifseism)
     app.register_blueprint(routes.user.user)
     app.register_blueprint(routes.sensor.sensor)
 

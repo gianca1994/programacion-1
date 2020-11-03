@@ -1,6 +1,6 @@
 from flask import Blueprint, redirect, url_for, current_app, make_response, flash
 from flask_breadcrumbs import register_breadcrumb
-from ..forms.login_form import LoginForm
+from ..forms.frmLogin import LoginForm
 from flask_login import logout_user, login_user
 import requests, json
 from .auth import User

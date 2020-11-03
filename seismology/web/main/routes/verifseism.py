@@ -1,8 +1,8 @@
 from flask import Blueprint, redirect, render_template, request, url_for, flash, make_response
 from flask_breadcrumbs import register_breadcrumb
-from ..forms.login_form import LoginForm
+from ..forms.frmLogin import LoginForm
 import requests, json, io, csv
-from ..utilities.functions import sendRequest
+from ..utilities.Functions import sendRequest
 from ..forms.frmSeisms import SeismFilterForm
 
 verifseism = Blueprint("verifseism", __name__, url_prefix="/verified-seism")
@@ -15,7 +15,7 @@ def index():
     filter.sensorId.choices = [
         (int(sensor["id"]), sensor["name"]) for sensor in json.loads(r.text)["sensors"]
     ]
-    filter.sensorId.choices.insert(0, [0, "All"])
+    filter.sensorId.choices.insert(0, [0,"All"])
     fact = {}
 
     if filter.validate():
@@ -90,8 +90,8 @@ def index():
         return redirect(url_for("verified_seism.index"))
 
 
-@verified_seism.route("/view/<int:id>")
-@register_breadcrumb(verified_seism, ".view", "View")
+@verifseism.route("/view/<int:id>")
+@register_breadcrumb(verifseism, ".view", "View")
 def view(id):
     r = sendRequest(method="get", url="/verified-seism/" + str(id))
 

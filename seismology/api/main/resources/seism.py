@@ -83,11 +83,8 @@ class VerifSeisms(Resource):
                 if key == "perpage":
                     perpage = value
 
-        except:
-            pass
-
-        # Alojamos en la variable seisms, todos los sismos verificados obtenidos de las paginas.
-        seisms = seisms.paginate(page, perpage, True, 5000)
+            # Alojamos en la variable seisms, todos los sismos verificados obtenidos de las paginas.
+            seisms = seisms.paginate(page, perpage, True, 5000)
 
         # Con el return nos devolvera la coleccion de Seisms.
         return jsonify({'Verif-seisms': [seism.to_json() for seism in seisms.items]})

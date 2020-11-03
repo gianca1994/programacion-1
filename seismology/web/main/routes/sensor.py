@@ -2,10 +2,9 @@ from flask import Blueprint, render_template, current_app, redirect, url_for
 from flask_breadcrumbs import register_breadcrumb
 import requests, json
 from flask_login import login_required, LoginManager
-from ..utilities.functions import sendRequest
+from ..utilities.Functions import sendRequest
 from .auth import admin_required
-from ..forms.sensor_form import SensorCreateForm, SensorEditForm, SensorFilterForm
-
+from ..forms.frmSensor import SensorCreateForm, SensorEditForm, SensorFilterForm
 
 sensor = Blueprint("sensor", __name__, url_prefix="/sensor")
 

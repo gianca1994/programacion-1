@@ -6,9 +6,9 @@ from main.mail.functions import sendMail
 from main.auth.decorators import admin_required
 
 # pip install fpdf
-from fpdf import FPDF
+#from fpdf import FPDF
 # pip install reportlab
-from reportlab.pdfgen.canvas import Canvas
+#from reportlab.pdfgen.canvas import Canvas
 
 
 # Utilizamos Blueprint para generar rutas y lo almacenamos en la variable auth
@@ -67,31 +67,31 @@ def checkStatus():
             #from fpdf import FPDF
             # Primero crearemos nuestro archivo PDF, usando la biblioteca FṔDF
             # Creamos la variable y guardamos la clase FPDF()
-            SensorsListpdf = FPDF()
+      #      SensorsListpdf = FPDF()
             # Agregamos una pagina al archivo pdf, para poder almacenar la lista de sensores
-            SensorsListpdf.add_page()
+      #      SensorsListpdf.add_page()
             # Elegimos el tipo de letra y tamaño
-            SensorsListpdf.set_font("Arial", size=12)
+      #      SensorsListpdf.set_font("Arial", size=12)
             # Me faltaria agregar la lista de los sensores fallando al archivo...
-            SensorsDesactivated = jsonify({"sensors": [sensor.to_json() for sensor in sensors]})
-            SensorsListpdf.cell(SensorsDesactivated)
+      #      SensorsDesactivated = jsonify({"sensors": [sensor.to_json() for sensor in sensors]})
+      #      SensorsListpdf.cell(SensorsDesactivated)
             # Guardamos la informacion con output en el archivo.pdf
-            SensorsListpdf.output('SensorList.pdf')
+      #      SensorsListpdf.output('SensorList.pdf')
             # Adjuntar el archivo.PDF
-            attach(filename=SensorList, content_type=application/pdf, data=SensorsList, disposition=None, headers=None)
+      #      attach(filename=SensorList, content_type=application/pdf, data=SensorsList, disposition=None, headers=None)
 
             # OPCION 2
             # pip install reportlab
             # from reportlab.pdfgen.canvas import Canvas
             # Creamos el archivo PDF con canvas y lo almacenamos en la variable
-            SensorsList=Canvas('SensorList.pdf')
+      #      SensorsList=Canvas('SensorList.pdf')
             # Escribimos la variable con los datos de los sensores
-            SensorsDesactivated=jsonify({"sensors": [sensor.to_json() for sensor in sensors]})
-            SensorsList.drawString(0, 0,SensorsDesactivated)
+      #      SensorsDesactivated=jsonify({"sensors": [sensor.to_json() for sensor in sensors]})
+      #      SensorsList.drawString(0, 0,SensorsDesactivated)
             # Guardamos los datos de los sensores en el archivo..
-            SensorsList.save()
+      #      SensorsList.save()
             # Adjuntamos la variable al email
-            msg.attach(filename=SensorsList, content_type=application/pdf, data=sensors, disposition=None, headers=None)
+      #      msg.attach(filename=SensorsList, content_type=application/pdf, data=sensors, disposition=None, headers=None)
 
             # Enviamos el email con el archivo adjunto
             sendMail(adminList, "Deactivated sensors", "mail/sensor", sensorList=sensors)

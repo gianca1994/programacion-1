@@ -3,6 +3,7 @@ from wtforms.fields.html5 import EmailField
 from flask_wtf import FlaskForm
 from wtforms import validators
 
+
 class LoginForm(FlaskForm):
 
     # Definimos el email, contraseña y el "enviar" en el formulario.
