@@ -1,66 +1,44 @@
 {% extends "main.html" %}
-
-<!-- Importar el archivo de macros -->
 {% import "macros.html" as macro %}
 
-<!-- Define el contenido -->
 {% block content %}
-<main>
   <div class="row justify-content-center">
     <div class="col-md-auto d-none d-md-block"></div>
 
-    <h2 class="text-uppercase text-center text-white mb-0">{{title}}</h2>
+    <h2 class="text-uppercase text-center text-white mb-0">Unverified Seism</h2>
     <hr class="bg-white mb-5"/>
 
     <div class="col-md-auto">
       <table class="table table-bordered table-responsive">
-        <thead class="thead-dark">
-
-        <tr>
-          <th scope="col">ID</th>
-          <th scope="col">Date Time</th>
-          <th scope="col">Depth</th>
-          <th scope="col">Magnituded</th>
-          <th scope="col">Latitude</th>
-          <th scope="col">Longitude</th>
-          <th scope="col">Actions</th>
-        </tr>
-
-        </thead>
+        <h3>Seism {{unverified_seism.id}}</h3>
         <tbody>
-        {% for unverified_seism in unverified_seisms %}
-        {{ macro.show_unverified_seism(unverified_seism) }}
-        {% endfor %}
+          <tr>
+              <td>Date Time</td>
+              <td>{{unverified_seism.datetime}}</td>
+          </tr>
+          <tr>
+              <td>Depth</td>
+              <td>{{unverified_seism.depth}}</td>
+          </tr>
+          <tr>
+              <td>Magnitude</td>
+              <td>{{unverified_seism.magnitude}}</td>
+          </tr>
+          <tr>
+              <td>Latitude</td>
+              <td>{{unverified_seism.latitude}}</td>
+          </tr>
+          <tr>
+              <td>Longitude</td>
+              <td>{{unverified_seism.longitude}}</td>
+          </tr>
+          <tr>
+              <td>Sensor</td>
+              <td>{{unverified_seism.sensorId}}</td>
+          </tr>
         </tbody>
       </table>
     </div>
     <div class="col-md-auto d-none d-md-block thead-dark"></div>
   </div>
-
-  <br>
-
-  <nav aria-label="...">
-    <ul class="pagination justify-content-center">
-      <li class="page-item disabled">
-        <a class="page-link" href="#" tabindex="-1">Previous</a>
-      </li>
-      <li class="page-item"><a class="page-link" href="#">1</a></li>
-      <li class="page-item active">
-        <a class="page-link" href="#">2 <span class="sr-only">(current)</span></a>
-      </li>
-      <li class="page-item"><a class="page-link" href="#">3</a></li>
-      <li class="page-item"><a class="page-link" href="#">4</a></li>
-      <li class="page-item"><a class="page-link" href="#">5</a></li>
-      <li class="page-item"><a class="page-link" href="#">6</a></li>
-      <li class="page-item"><a class="page-link" href="#">7</a></li>
-      <li class="page-item"><a class="page-link" href="#">8</a></li>
-      <li class="page-item"><a class="page-link" href="#">9</a></li>
-      <li class="page-item"><a class="page-link" href="#">10</a></li>
-
-      <li class="page-item">
-        <a class="page-link" href="#">Next</a>
-      </li>
-    </ul>
-  </nav>
-</main>
 {% endblock %}
