@@ -1,13 +1,13 @@
-{% macro show_verified_seism(verified_seism) %}
+{% macro show_verified_seism(verified-seism) %}
     <tr>
-        <th scope="row">{{verified_seism.id}}</th>
-        <td>{{verified_seism.datetime}}</td>
-        <td>{{verified_seism.depth}}</td>
-        <td>{{verified_seism.magnitude}}</td>
-        <td>{{verified_seism.sensor.name}}</td>
+        <th scope="row">{{verified-seism.id}}</th>
+        <td>{{verified-seism.datetime}}</td>
+        <td>{{verified-seism.depth}}</td>
+        <td>{{verified-seism.magnitude}}</td>
+        <td>{{verified-seism.sensor.name}}</td>
         <td>
             <div class="btn-group" role="group">
-                <a class="btn btn-sm btn-dark" type="button" href="{{ url_for('verified_seism.view', id=verified_seism.id) }}">
+                <a class="btn btn-sm btn-dark" type="button" href="{{ url_for('verified-seism.view', id=verified_seism.id) }}">
                     <i class="fas fa-eye"></i></a>
                 <a class="btn btn-sm btn-dark" type="button" href="#"><i class="fas fa-download"></i></a>
             </div>
@@ -15,20 +15,20 @@
     </tr>
 {% endmacro %}
 
-{% macro show_unverified_seism(unverified_seism) %}
+{% macro show_unverified_seism(unverified-seism) %}
     <tr>
-        <th scope="row">{{unverified_seism.id}}</th>
-        <td>{{unverified_seism.datetime}}</td>
-        <td>{{unverified_seism.depth}}</td>
-        <td>{{unverified_seism.magnitude}}</td>
-        <td>{{unverified_seism.sensor.name}}</td>
+        <th scope="row">{{unverified-seism-seism.id}}</th>
+        <td>{{unverified-seism.datetime}}</td>
+        <td>{{unverified-seism.depth}}</td>
+        <td>{{unverified-seism.magnitude}}</td>
+        <td>{{unverified-seism.sensor.name}}</td>
         <td>
             <div class="btn-group" role="group">
-                <a class="btn btn-sm btn-dark" type="button" href="{{url_for('unverified_seism.view',id=unverified_seism.id)}}">
+                <a class="btn btn-sm btn-dark" type="button" href="{{url_for('unverified-seism.view',id=unverified_seism.id)}}">
                     <i class="fas fa-eye"></i></a>
-                <a class="btn btn-sm btn-dark" type="button" href="{{url_for('unverified_seism.edit',id=unverified_seism.id)}}">
+                <a class="btn btn-sm btn-dark" type="button" href="{{url_for('unverified-seism.edit',id=unverified_seism.id)}}">
                     <i class="fas fa-edit"></i></a>
-                <a class="btn btn-sm btn-dark" type="button" href="{{url_for('unverified_seism.delete', id=unverified_seism.id)}}">
+                <a class="btn btn-sm btn-dark" type="button" href="{{url_for('unverified-seism.delete', id=unverified_seism.id)}}">
                     <i class="fas fa-trash"></i></a>
             </div>
         </td>

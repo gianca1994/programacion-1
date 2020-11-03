@@ -9,7 +9,7 @@
 
         {% block head %}
           <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css">
-          <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+          <link rel="stylesheet" href="{{ url_for('Static', filename='css/style.css') }}">
         {% endblock %}
     </head>
 
@@ -35,7 +35,7 @@
 
                     <div class="collapse navbar-collapse" id="navbarSupportedContent">
                         <div class="navbar-nav mr-auto">
-                            <a class="nav-item nav-link active" href="{{url_for('verified_seism.index')}}">Verfied-Seisms</a>
+                            <a class="nav-item nav-link active" href="{{url_for('verified-seism.index')}}">Verfied-Seisms</a>
                             {% if current_user.is_authenticated %}
                                 {% if current_user.admin %}
                                     <a class="nav-item nav-link" href="{{url_for('sensor.index')}}">Sensors</a>
