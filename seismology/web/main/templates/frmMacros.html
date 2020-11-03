@@ -1,4 +1,3 @@
-<!-- Macro para los "validation errors" -->
 {% macro show_error(field) %}
     {% if field.errors %}
         <div class="alert alert-danger my-1" role="alert">
@@ -9,25 +8,21 @@
     {% endif %}
 {% endmacro %}
 
-<!-- Macro para los "form fields" -->
 {% macro show_field(field) %}
     {{ field.label }}
     {{ field(**kwargs) | safe }}
     {{ show_error(field) }}
 {% endmacro %}
 
-<!-- Macro para los "unlabeled fields" -->
 {% macro show_placeholder(field) %}
     {{ field(placeholder=field.label.text, **kwargs) | safe }}
     {{ show_error(field) }}
 {% endmacro %}
 
-<!-- Macro para los "fields send" -->
 {% macro show_submit(field) %}
     {{ field(**kwargs) | safe }}
 {% endmacro %}
 
-<!-- Macro para los "checkbox fields" -->
 {% macro show_checkbox(field) %}
     <div class="checkbox">
       <label>{{ field.label }} {{ field(type='checkbox', **kwargs) }}</label>
