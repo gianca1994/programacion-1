@@ -1,7 +1,7 @@
-from flask import Blueprint, render_template, current_app, redirect, url_for, flash
+from flask import Blueprint, render_template, current_app, redirect, url_for, flash, request
 from flask_breadcrumbs import register_breadcrumb
 from ..forms.frmSeisms import UnverifiedSeismEditForm
-import requests, json
+import json
 from flask_login import login_required
 from ..utilities.Functions import sendRequest
 from .auth import admin_required

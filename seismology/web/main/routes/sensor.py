@@ -117,7 +117,7 @@ def edit(id):
         form.status.data = sensor["status"]
         form.active.data = sensor["active"]
 
-        for user_id, user_email in users
+        for user_id, user_email in users:
             if sensor["user"]["id"] == user_id:
                 form.userId.data = int(user_id)
 

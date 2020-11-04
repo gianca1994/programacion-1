@@ -4,6 +4,7 @@ from ..forms.frmLogin import LoginForm
 from flask_login import logout_user, login_user
 import requests, json
 from .auth import User
+from . import verifseism
 
 
 main = Blueprint("main", __name__, url_prefix="/")
@@ -11,7 +12,7 @@ main = Blueprint("main", __name__, url_prefix="/")
 @main.route("/")
 @register_breadcrumb(main, "breadcrumbs.", "Home")
 def index():
-    return redirect(url_for("verified_seism.index"))
+    return redirect(url_for("verifseism.index"))
 
 @main.route("/login", methods=["POST"])
 def login():
@@ -41,7 +42,7 @@ def login():
 
 @main.route("/logout")
 def logout():
-    # Creamos la request, vaciamos la cockie y deslogueamos al usuario.
+    # Creamos la requests, vaciamos la cockie y deslogueamos al usuario.
     req = make_response(redirect(url_for("main.index")))
     req.set_cookie("access_token", "", httponly=True)
     logout_user()

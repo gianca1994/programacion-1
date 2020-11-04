@@ -1,10 +1,11 @@
-from flask import Blueprint, render_template, current_app, redirect, url_for, flash
+from flask import Blueprint, render_template, current_app, redirect, url_for, flash, request
 from flask_breadcrumbs import register_breadcrumb
-from ..forms.user_form import UserCreateForm, UserEditForm
-import requests, json
+from ..forms.frmUser import UserEditForm, UserCreateForm
+import json
 from flask_login import login_required, LoginManager
-from ..utilities.functions import sendRequest
+from ..utilities.Functions import sendRequest
 from .auth import admin_required
+
 
 user = Blueprint("user", __name__, url_prefix="/user")
 

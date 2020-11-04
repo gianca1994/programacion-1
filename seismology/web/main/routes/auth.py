@@ -1,15 +1,15 @@
-from .. import login_manager
 from flask import request, flash, redirect, url_for
 from flask_login import UserMixin, LoginManager, current_user
 from functools import wraps
 import jwt
+#from .. import login_manager
 
 # Creamos esta clase para almacenar los datos del usuario previamente logueado.
 class User(UserMixin):
     def __init__(self, id, email, admin):
         self.id = id; self.email = email; self.admin = admin
 
-@login_manager.request_loader
+#@login_manager.request_loader
 def load_user(request):
     # Verificamos si hay cockies almacenadas.
     if "access_token" in request.cookies:
@@ -21,12 +21,12 @@ def load_user(request):
             return user
         except jwt.exceptions.InvalidTokenError:
             print("token invalid")
-        except jwt.exceptions.DecodeError:
-            print("DecodeError")
+        #except jwt.exceptions.DecodeError:
+        #    print("DecodeError")
     return None
 
 # Redireccionamos a la pagina main.index, la cual contiene el formulario de logueo, en caso de no haberse logueado.
-@login_manager.unauthorized_handler
+#@login_manager.unauthorized_handler
 def unauthorized_callback():
     flash('You must log in to continue','warning')
     return redirect(url_for('main.index'))
