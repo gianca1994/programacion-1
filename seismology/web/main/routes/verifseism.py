@@ -15,7 +15,7 @@ def index():
     filter.sensorId.choices = [
         (int(sensor["id"]), sensor["name"]) for sensor in json.loads(r.text)["sensors"]
     ]
-    filter.sensorId.choices.insert(0, [0,"All"])
+    filter.sensorId.choices.insert(0, [0, "All"])
     fact = {}
 
     if filter.validate():
@@ -39,7 +39,7 @@ def index():
             fact["magnitude_max"] = filter.magnitude_max.data
 
     if "sort_by" in request.args:
-        data["sort_by"] = request.args.get("sort_by", "")
+        fact["sort_by"] = request.args.get("sort_by", "")
 
     if "download" in request.args:
         if request.args.get("download", "") == "Download":
@@ -69,11 +69,11 @@ def index():
             output.headers["Content-type"] = "text/csv"
             return output
 
-    if "page" in request.args:
-        data["page"] = request.args.get("page", "")
+    if 'page' in request.args:
+        fact["page"] = request.args.get("page", "")
     else:
-        if "page" in data:
-            del data["page"]
+        if 'page' in data:
+            del fact["page"]
 
     r = sendRequest(method="get", url="/verified-seisms", data=json.dumps(data))
 

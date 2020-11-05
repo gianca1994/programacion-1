@@ -11,7 +11,7 @@ from main.auth.decorators import admin_required
 
 class Sensor(Resource):
 
-    @admin_required
+    #   @admin_required
     # Primero definimos "GET" para obtener el recurso de la coleccion "SENSORS" y su "ID".
     def get(self, id):
         # Asignamos a la variable "sensor" un sensor traido de la db, en caso de no existir, nos dara error 404.
@@ -20,7 +20,7 @@ class Sensor(Resource):
         # Nos devuelve el sensor pedido por id en formato JSON.
         return sensor.to_json()
 
-    @admin_required
+    #   @admin_required
     # Ahora definimos "PUT" para modificar un sensor.
     def put(self, id):
 
@@ -44,7 +44,7 @@ class Sensor(Resource):
             # Error "400 (Solicitud incorrecta)".
             return str(error), 400
 
-    @admin_required
+    #  @admin_required
     # Definimos "DELETE" para eliminar un recurso de la coleccion "SENSORS".
     def delete(self, id):
         # Verificamos si existe el "Sensor", si existe, lo almacena en la variable sensor, sino nos dara error 404.
@@ -72,7 +72,7 @@ class Sensor(Resource):
 
 class Sensors(Resource):
 
-    @admin_required
+    #  @admin_required
     # Usamos el metodo "GET" para obtener la coleccion de recursos "SENSORS".
     def get(self):
 
@@ -125,10 +125,11 @@ class Sensors(Resource):
             sensors = sensors.paginate(page, perpage, True, 500)
 
             # Nos devuelve la coleccion con los sensores filtrados.
-            return jsonify({"Sensors": [sensor.to_json() for sensor in sensors.items], "total": sensors.total,"pages": sensors.pages,
+            return jsonify({"Sensors": [sensor.to_json() for sensor in sensors.items], "total": sensors.total,
+                            "pages": sensors.pages,
                             "page": page})
 
-    @admin_required
+    #  @admin_required
     # Definimos "POST" para agregar un sensor a la coleccion.
     def post(self):
         # Traemos la coleccion de sensores de la db y la alojamos en la variable "sensors".
@@ -144,6 +145,7 @@ class Sensors(Resource):
         except Exception as error:
             # Nos retorna el error "400 (Solicitud incorrecta)"
             return str(error), 400
+
 
 class SensorsInfo(Resource):
     # Obtenemos la lista de sensores que sera mostrado a los clientes no logueados

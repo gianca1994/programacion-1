@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template, current_app, redirect, url_for
+from flask import Blueprint, render_template, current_app, redirect, url_for, request
 from flask_breadcrumbs import register_breadcrumb
 import requests, json
 from flask_login import login_required, LoginManager
@@ -9,8 +9,8 @@ from ..forms.frmSensor import SensorCreateForm, SensorEditForm, SensorFilterForm
 sensor = Blueprint("sensor", __name__, url_prefix="/sensor")
 
 @sensor.route("/")
-@login_required
-@admin_required
+#@login_required
+#@admin_required
 @register_breadcrumb(sensor,".","Sensors")
 def index():
 
@@ -56,8 +56,8 @@ def index():
 
 
 @sensor.route("/view/<int:id>")
-@login_required
-@admin_required
+#@login_required
+#@admin_required
 @register_breadcrumb(sensor, ".view", "Sensor")
 def view(id):
 
@@ -75,8 +75,8 @@ def view(id):
 
 
 @sensor.route("/create", methods=["GET", "POST"])
-@login_required
-@admin_required
+#@login_required
+#@admin_required
 @register_breadcrumb(sensor, ".create", "Create Sensor")
 def create():
 
@@ -91,8 +91,8 @@ def create():
 
 
 @sensor.route("/edit/<int:id>", methods=["GET", "POST"])
-@login_required
-@admin_required
+#@login_required
+#@admin_required
 @register_breadcrumb(sensor, ".edit", "Edit Sensor")
 def edit(id):
 
@@ -132,8 +132,8 @@ def edit(id):
 
 
 @sensor.route("/delete/<int:id>")
-@login_required
-@admin_required
+#@login_required
+#@admin_required
 def delete(id):
 
     r = sendRequest(method="delete", url="/sensor/"+str(id), auth=True)

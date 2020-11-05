@@ -64,7 +64,7 @@ def create():
         r = sendRequest(method="post", url="/users", data=data, auth=True)
         return redirect(url_for("user.index"))
 
-    return render_template("userCreate_form.html", form=form)
+    return render_template("frmNewUser.html", form=form)
 
 @user.route("/edit/<int:id>", methods=["GET","POST"])
 @login_required
@@ -94,7 +94,7 @@ def edit(id):
         flash("User edited","success")
         return redirect(url_for("user.index"))
 
-    return render_template("userEdit_form.html", form=form, id=id)
+    return render_template("frmEditUser.html", form=form, id=id)
 
 @user.route("/delete/<int:id>")
 @login_required

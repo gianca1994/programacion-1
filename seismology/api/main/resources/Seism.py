@@ -86,37 +86,8 @@ class VerifSeisms(Resource):
             # Alojamos en la variable seisms, todos los sismos verificados obtenidos de las paginas.
             seisms = seisms.paginate(page, perpage, True, 5000)
 
-        # Con el return nos devolvera la coleccion de Seisms.
-        return jsonify({'Verif-seisms': [seism.to_json() for seism in seisms.items]})
-
-
-# Definimos "POST" para agregar un sieism verificado a la coleccion.
-def post(self):
-    # Traemos la lista de todos los sensores y los alojamos en la variable "sensors".
-    sensors = db.session.query(SensorModel).all()
-    sensorsId = []
-
-    # Utilizamos un FOR para recorrer el diccionario de sensors
-    for sensor in sensors:
-        sensorsId.append(sensor.id)
-    if sensorsId:
-        value_sensor = {'datetime': time.strftime(r"%Y-%m-%d %H:%M:%S", time.localtime()),
-                        'depth': randint(5, 250), 'magnitude': round(uniform(2.0, 5.5), 1),
-                        'latitude': uniform(-180, 180), 'longitude': uniform(-90, 90),
-                        'verified': True, 'sensorId': sensorsId[randint(0, len(sensorsId) - 1)]
-                        }
-
-        seism = SeismModel.from_json(value_sensor)
-        # Agregamos el seism a la db.
-        db.session.add(seism)
-        # Actualizamos la db.
-        db.session.commit()
-
-        # Retornamos el seism en formato json con el codigo "201 (Nuevo recurso Creado)"
-        return seism.to_json(), 201
-    else:
-        # Sino nos devuelve el error "400 (Solicitud incorrecta)"
-        return "No sensors found, can't create seism", 400
+            # Con el return nos devolvera la coleccion de Seisms.
+            return jsonify({'Verif-seisms': [seism.to_json() for seism in seisms.items]})
 
 
 # -------------------------------------------------------------------------------------#
@@ -199,7 +170,7 @@ class UnverifSeism(Resource):
 
 class UnverifSeisms(Resource):
 
-    @jwt_required
+   # @jwt_required
     # Aca definimos un "GET" para obtener la coleccion de UnverifSeisms.
     def get(self):
 
@@ -235,10 +206,10 @@ class UnverifSeisms(Resource):
                 # Utilizamos sort_by para ordenar todo de mayor a menor.
                 if key == "sort_by":
                     if value == "datime":
-                        seisms = seisms.order_by(SeismModel.dt)
+                        seisms = seisms.order_by(SeismModel.datime)
                     # Se agrega datetime.desc para realizar el ordenamiento y se almacena en la variable.
                     if value == "datetime.desc":
-                        seisms = seisms.order_by(SeismModel.dt.desc())
+                        seisms = seisms.order_by(SeismModel.datime.desc())
                     if value == "sensorname":
                         seisms = seisms.join(SeismModel.sensor).order_by(SensorModel.name.asc())
                     if value == "sensorname.desc":
@@ -253,11 +224,11 @@ class UnverifSeisms(Resource):
                     if value == "depth.desc":
                         seisms = seisms.order_by(SeismModel.depth.desc())
 
-                # Definimos los if dentro de for para la paginacion de sismos no verificados mostrados por pagina.
-                if key == "page":
-                    page = int(Value)
-                if key == "per_page":
-                    perpage = int(value)
+                    # Definimos los if dentro de for para la paginacion de sismos no verificados mostrados por pagina.
+                    if key == "page":
+                        page = int(Value)
+                    if key == "per_page":
+                        perpage = int(value)
 
         # Alojamos en la variable seisms, todos los sismos obtenidos de las paginas.
         seisms = seisms.paginate(page, perpage, True, 100)
@@ -266,20 +237,17 @@ class UnverifSeisms(Resource):
         return jsonify({"Unverif-seisms": [seism.to_json() for seism in seisms.items], "total": seisms.total, "pages": seisms.pages,
                         "page": page})
 
-    @jwt_required
+  #  @jwt_required
     # Definimos "POST" para agregar un seisms no verificado a la coleccion.
     def post(self):
 
         # Traemos la coleccion de seisms completa y la alojamos en la variable, si no existe, error 404.
         sensors = db.session.query(SensorModel).all()
-        sensorlist = []
+        sensorlist = [(int(sensor.id)) for sensor in sensors]
 
-        # Utilizamos un FOR para recorrer el diccionario y evalua el contenido alojado en sensors.
-        for sensor in sensors:
-            sensorlist.append(sensor.id)
         if sensorlist:
             value_sensor = {
-                'datetime': time.strftime(r'%Y-%m-%d %H:%M:%S', time.localtime()), 'depth': randint(5, 250),
+                'dtb': time.strftime(r'%Y-%m-%d %H:%M:%S', time.localtime()), 'depth': randint(5, 250),
                 'magnitude': round(uniform(2.0, 5.5), 1), 'latitude': uniform(-180, 180), 'longitude': uniform(-90, 90),
                 'verified': False, 'sensorId': sensorlist[randint(0, len(sensorlist) - 1)]
             }
@@ -290,8 +258,9 @@ class UnverifSeisms(Resource):
             # Actualizamos la db.
             db.session.commit()
 
-            # Retornamos el seism en formato json con el codigo "201 (Nuevo recurso Creado)"
-            return seism.to_json(), 201
         else:
             # Sino nos devuelve el error "400 (Solicitud incorrecta)"
             return 'Sensors not found, cant create seism', 400
+
+        # Retornamos el seism en formato json con el codigo "201 (Nuevo recurso Creado)"
+        return seism.to_json(), 201
