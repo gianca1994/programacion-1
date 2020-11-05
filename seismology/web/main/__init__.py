@@ -5,6 +5,7 @@ from flask_breadcrumbs import Breadcrumbs
 from flask_login import LoginManager
 from .routes import main, verifseism, unverifseism, user, sensor
 
+
 login_manager = LoginManager()
 
 @login_manager.unauthorized_handler
@@ -26,7 +27,7 @@ def create_app():
     # Blueprints
     app.register_blueprint(routes.main.main)
     app.register_blueprint(routes.verifseism.verifseism)
-    #app.register_blueprint(routes.unverifseism.verifseism)
+    #app.register_blueprint(routes.unverifseism.unverifseism)
     app.register_blueprint(routes.user.user)
     app.register_blueprint(routes.sensor.sensor)
 

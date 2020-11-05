@@ -3,13 +3,13 @@ from flask_breadcrumbs import register_breadcrumb
 import requests, json
 from flask_login import login_required, LoginManager
 from ..utilities.Functions import sendRequest
-from .auth import admin_required
+#from .auth import admin_required
 from ..forms.frmSensor import SensorCreateForm, SensorEditForm, SensorFilterForm
 
 sensor = Blueprint("sensor", __name__, url_prefix="/sensor")
 
 @sensor.route("/")
-#@login_required
+@login_required
 #@admin_required
 @register_breadcrumb(sensor,".","Sensors")
 def index():
@@ -56,7 +56,7 @@ def index():
 
 
 @sensor.route("/view/<int:id>")
-#@login_required
+@login_required
 #@admin_required
 @register_breadcrumb(sensor, ".view", "Sensor")
 def view(id):
@@ -75,7 +75,7 @@ def view(id):
 
 
 @sensor.route("/create", methods=["GET", "POST"])
-#@login_required
+@login_required
 #@admin_required
 @register_breadcrumb(sensor, ".create", "Create Sensor")
 def create():
@@ -91,7 +91,7 @@ def create():
 
 
 @sensor.route("/edit/<int:id>", methods=["GET", "POST"])
-#@login_required
+@login_required
 #@admin_required
 @register_breadcrumb(sensor, ".edit", "Edit Sensor")
 def edit(id):
@@ -132,7 +132,7 @@ def edit(id):
 
 
 @sensor.route("/delete/<int:id>")
-#@login_required
+@login_required
 #@admin_required
 def delete(id):
 

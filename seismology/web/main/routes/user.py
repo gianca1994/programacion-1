@@ -4,14 +4,14 @@ from ..forms.frmUser import UserEditForm, UserCreateForm
 import json
 from flask_login import login_required, LoginManager
 from ..utilities.Functions import sendRequest
-from .auth import admin_required
+#from .auth import admin_required
 
 
 user = Blueprint("user", __name__, url_prefix="/user")
 
 @user.route("/")
 @login_required
-@admin_required
+#@admin_required
 @register_breadcrumb(user, ".", "Users")
 def index():
 
@@ -38,7 +38,7 @@ def index():
 
 @user.route("/view/<int:id>")
 @login_required
-@admin_required
+#@admin_required
 @register_breadcrumb(user,".view","View")
 def view(id):
     r = sendRequest(method="get", url="/user/"+str(id), auth=True)
@@ -53,7 +53,7 @@ def view(id):
 
 @user.route("/create", methods=["GET", "POST"])
 @login_required
-@admin_required
+#@admin_required
 @register_breadcrumb(user, ".create", "Create User")
 def create():
     form = UserCreateForm()
@@ -68,7 +68,7 @@ def create():
 
 @user.route("/edit/<int:id>", methods=["GET","POST"])
 @login_required
-@admin_required
+#@admin_required
 @register_breadcrumb(user, ".edit", "Edit User")
 def edit(id):
     form = UserEditForm()
@@ -98,7 +98,7 @@ def edit(id):
 
 @user.route("/delete/<int:id>")
 @login_required
-@admin_required
+#@admin_required
 def delete(id):
     r = sendRequest(method="delete", url="/user/"+str(id), auth=True)
     flash("User deleted","danger")

@@ -4,7 +4,8 @@ from ..forms.frmSeisms import UnverifiedSeismEditForm
 import json
 from flask_login import login_required
 from ..utilities.Functions import sendRequest
-from .auth import admin_required
+
+#from .auth import admin_required
 
 
 unverified_seism = Blueprint("unverified_seism", __name__, url_prefix="/unverified-seism")
@@ -122,9 +123,9 @@ def delete(id):
 
 @unverified_seism.route("/create", methods=["GET", "POST"])
 @login_required
-@admin_required
+#@admin_required
 @register_breadcrumb(unverified_seism, ".create", "Create Sensor")
 def create():
     r = sendRequest(method="post", url="/unverified-seisms", auth=True)
     flash("Unverified Seism created", "success")
-    return redirect(url_for("unverified_seism.index"))
+    return redirect(url_for("unverif-seism.index"))

@@ -9,7 +9,7 @@ verifseism = Blueprint("verifseism", __name__, url_prefix="/verified-seism")
 
 @verifseism.route("/")
 def index():
-    frmLogin = LoginForm()
+    #frmLogin = LoginForm()
     filter = SeismFilterForm(request.args, meta={"csrf": False})
     r = sendRequest(method="get", url="/sensors-info")
     filter.sensorId.choices = [
@@ -48,12 +48,12 @@ def index():
             SeismList = []
 
             while codeOK == 200:
-                data["page"] = page
-                r = sendRequest(method="get", url="/verified-seisms", data=json.dumps(data))
+                fact["page"] = page
+                r = sendRequest(method="get", url="/verif-seisms", data=json.dumps(fact))
                 codeOK = r.status_code
 
                 if codeOK == 200:
-                    for seism in json.loads(r.text)["Verified-seisms"]:
+                    for seism in json.loads(r.text)["Verif-seisms"]:
                         element = {"datetime": seism["datetime"], "depth": seism["depth"], "magnitude": seism["magnitude"],
                             "latitude": seism["latitude"], "longitude": seism["longitude"], "sensor.name": seism["sensor"]["name"]}
                         SeismList.append(element)
@@ -72,22 +72,22 @@ def index():
     if 'page' in request.args:
         fact["page"] = request.args.get("page", "")
     else:
-        if 'page' in data:
+        if 'page' in fact:
             del fact["page"]
 
-    r = sendRequest(method="get", url="/verified-seisms", data=json.dumps(data))
+    r = sendRequest(method="get", url="/verif-seisms", data=json.dumps(fact))
 
     if r.status_code == 200:
-        verified_seisms = json.loads(r.text)["Verified-seisms"]
+        verifseism = json.loads(r.text)["Verif-seisms"]
         paginate = {}
         paginate["total"] = json.loads(r.text)["total"]
         paginate["pages"] = json.loads(r.text)["pages"]
         paginate["current_page"] = json.loads(r.text)["page"]
         title = "Verified Seisms List"
-        return render_template("verified-seisms.html", title=title, verified_seisms=verified_seisms, loginForm=loginForm, filter=filter, pagination=paginate)
+        return render_template("Verified-Seisms.html", title=title, verified_seisms=verifseism, filter=filter, pagination=paginate)
     else:
         flash("Filtering Error", "danger")
-        return redirect(url_for("verified_seism.index"))
+        return redirect(url_for("verifseism.index"))
 
 
 @verifseism.route("/view/<int:id>")
@@ -96,10 +96,10 @@ def view(id):
     r = sendRequest(method="get", url="/verified-seism/" + str(id))
 
     if (r.status_code == 404):
-        return redirect(url_for("verified_seism.index"))
+        return redirect(url_for("verifseism.index"))
 
     verified_seism = json.loads(r.text)
     title = "Verified Seism View"
-    loginForm = LoginForm()
+    #loginForm = LoginForm()
 
-    return render_template("verified-seism.html", title=title, verified_seism=verified_seism, loginForm=loginForm)
+    return render_template("verified-seism.html", title=title, verified_seism=verified_seism)

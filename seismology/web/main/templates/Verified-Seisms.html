@@ -6,20 +6,8 @@
     <div class="row col-md-auto justify-content-center">
       <div class="col-md-auto d-none d-ml-auto"></div>
       <div class="col-md-auto">
-
-        <div class="card text-center">
-          <div class="card-header">
-            <ul class="nav nav-pills card-header-pills">
-              <li class="nav-item">
-                <a class="nav-link active bg-dark" href="#">Description</a>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link" href="#">Contact the seismologist</a>
-              </li>
-            </ul>
-          </div>
-          <div class="card-body">
-            <h5 class="card-title">Seism {{verified_seism.id}}</h5>
+         <div class="card-body">
+            <h5 class="card-title">{{title}}</h5>
             <p class="card-text">
 
               <table class="table">
@@ -28,14 +16,14 @@
                     <th scope="col">ID</th>
                     <th scope="col">
                       {% if request.args.sort_by == "datetime.desc"  %}
-                        <a class="text-white" href="{{ url_for('verified-seism.index',
+                        <a class="text-white" href="{{ url_for('verifseism.index',
                         sort_by = 'datetime',
                         datetime = request.args.datetime, datetimeFrom = request.args.datetimeFrom,
                         datetimeTo = request.args.datetimeTo, depth_min = request.args.depth_min,
                         depth_max = request.args.depth_max, magnitude_max = request.args.magnitude_max,
                         magnitude_min = request.args.magnitude_min, sensorId = request.args.sensorId )}}">Date Time</a>
                       {% else %}
-                        <a class="text-white" href="{{ url_for('verified-seism.index',
+                        <a class="text-white" href="{{ url_for('verifseism.index',
                         sort_by = 'datetime.desc',
                         datetime = request.args.datetime, datetimeFrom = request.args.datetimeFrom,
                         datetimeTo = request.args.datetimeTo, depth_min = request.args.depth_min,
@@ -46,14 +34,14 @@
 
                     <th scope="col">
                       {% if request.args.sort_by == "depth.desc"  %}
-                        <a class="text-white" href="{{ url_for('verified-seism.index',
+                        <a class="text-white" href="{{ url_for('verifseism.index',
                         sort_by = 'depth',
                         datetime = request.args.datetime, datetimeFrom = request.args.datetimeFrom,
                         datetimeTo = request.args.datetimeTo, depth_min = request.args.depth_min,
                         depth_max = request.args.depth_max, magnitude_max = request.args.magnitude_max,
                         magnitude_min = request.args.magnitude_min, sensorId = request.args.sensorId )}}">Depth</a>
                       {% else %}
-                        <a class="text-white" href="{{ url_for('verified-seism.index',
+                        <a class="text-white" href="{{ url_for('verifseism.index',
                         sort_by = 'depth.desc',
                         datetime = request.args.datetime, datetimeFrom = request.args.datetimeFrom,
                         datetimeTo = request.args.datetimeTo, depth_min = request.args.depth_min,
@@ -64,14 +52,14 @@
 
                     <th scope="col">
                       {% if request.args.sort_by == "magnitude.desc"  %}
-                        <a class="text-white" href="{{ url_for('verified-seism.index',
+                        <a class="text-white" href="{{ url_for('verifseism.index',
                         sort_by = 'magnitude',
                         datetime = request.args.datetime, datetimeFrom = request.args.datetimeFrom,
                         datetimeTo = request.args.datetimeTo, depth_min = request.args.depth_min,
                         depth_max = request.args.depth_max, magnitude_max = request.args.magnitude_max,
                         magnitude_min = request.args.magnitude_min, sensorId = request.args.sensorId )}}">Magnitude</a>
                       {% else %}
-                        <a class="text-white" href="{{ url_for('verified-seism.index',
+                        <a class="text-white" href="{{ url_for('verifseism.index',
                         sort_by = 'magnitude.desc',
                         datetime = request.args.datetime, datetimeFrom = request.args.datetimeFrom,
                         datetimeTo = request.args.datetimeTo, depth_min = request.args.depth_min,
@@ -82,14 +70,14 @@
 
                     <th scope="col">
                       {% if request.args.sort_by == "sensor.name.desc"  %}
-                        <a class="text-white" href="{{ url_for('verified-seism.index',
+                        <a class="text-white" href="{{ url_for('verifseism.index',
                         sort_by = 'sensor.name',
                         datetime = request.args.datetime, datetimeFrom = request.args.datetimeFrom,
                         datetimeTo = request.args.datetimeTo, depth_min = request.args.depth_min,
                         depth_max = request.args.depth_max, magnitude_max = request.args.magnitude_max,
                         magnitude_min = request.args.magnitude_min, sensorId = request.args.sensorId )}}">Sensor Name</a>
                       {% else %}
-                        <a class="text-white" href="{{ url_for('verified-seism.index',
+                        <a class="text-white" href="{{ url_for('verifseism.index',
                         sort_by = 'sensor.name.desc',
                         datetime = request.args.datetime, datetimeFrom = request.args.datetimeFrom,
                         datetimeTo = request.args.datetimeTo, depth_min = request.args.depth_min,
@@ -115,7 +103,7 @@
           <ul class="pagination justify-content-center">
             {% if pagination.current_page != 1 %}
               <li class="page-item">
-                <a class="page-link" href="{{ url_for('verified_seism.index',
+                <a class="page-link" href="{{ url_for('verifseism.index',
                 page = (pagination.current_page-1),
                 datetime = request.args.datetime, datetimeFrom = request.args.datetimeFrom,
                 datetimeTo = request.args.datetimeTo, depth_min = request.args.depth_min,
@@ -135,7 +123,7 @@
             {% for n in range(1, pagination.pages+1) %}
               {% if n != pagination.current_page %}
                 <li class="page-item">
-                  <a class="page-link" href="{{ url_for('verified_seism.index',
+                  <a class="page-link" href="{{ url_for('verifseism.index',
                   page = n,
                   datetime = request.args.datetime, datetimeFrom = request.args.datetimeFrom,
                   datetimeTo = request.args.datetimeTo, depth_min = request.args.depth_min,
@@ -151,7 +139,7 @@
 
             {% if pagination.current_page != pagination.pages %}
               <li class="page-item">
-                <a class="page-link" href="{{ url_for('verified_seism.index',
+                <a class="page-link" href="{{ url_for('verifseism.index',
                 page = (pagination.current_page+1),
                 datetime = request.args.datetime, datetimeFrom = request.args.datetimeFrom,
                 datetimeTo = request.args.datetimeTo, depth_min = request.args.depth_min,

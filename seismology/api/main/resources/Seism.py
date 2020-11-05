@@ -34,12 +34,13 @@ class VerifSeism(Resource):
 class VerifSeisms(Resource):
 
     # Luego definimos un "GET" para obtener la coleccion de seisms verificados.
+   # @property
     def get(self):
 
         # Definimos la variable "page" para decir cuantas paginas tendremos.
         page = 1
         # Definimos "perpage" para decir cuantos sensores mostrara cada pagina.
-        perpage = 100
+        perpage = 3
         # Aca analizamos los datos y filtramos los Seisms verificados de la coleccion,"verified == True".
         seisms = db.session.query(SeismModel).filter(SeismModel.verified == True)
 
@@ -83,11 +84,15 @@ class VerifSeisms(Resource):
                 if key == "perpage":
                     perpage = value
 
-            # Alojamos en la variable seisms, todos los sismos verificados obtenidos de las paginas.
-            seisms = seisms.paginate(page, perpage, True, 5000)
+        # Alojamos en la variable seisms, todos los sismos verificados obtenidos de las paginas.
+        seisms = seisms.paginate(page, perpage, True, 500)
 
-            # Con el return nos devolvera la coleccion de Seisms.
-            return jsonify({'Verif-seisms': [seism.to_json() for seism in seisms.items]})
+        # Con el return nos devolvera la coleccion de Seisms.
+        return jsonify({
+                'Verif-seisms': [seism.to_json() for seism in seisms.items],
+                'total' : seisms.total,
+                'pages' : seisms.pages,
+                'page' : page,})
 
 
 # -------------------------------------------------------------------------------------#
@@ -112,7 +117,7 @@ class UnverifSeism(Resource):
             # En caso de no existir, nos devuelve un error 403 "Prohibido (el servidor se niega a devolver el contenido)".
             return "Denied Access", 403
 
-    @jwt_required
+   # @jwt_required
     # Ahora para modifcar un recurso de la coleccion definimos un "PUT".
     def put(self, id):
 
@@ -144,7 +149,7 @@ class UnverifSeism(Resource):
             # Si no, nos devuelve el error "403 (Acceso denegado o Prohibido)"
             return "Denied Access", 403
 
-    @jwt_required
+   # @jwt_required
     # Por ultimo definimos un "delete" para borrar un seism no verificado de la coleccion.
     def delete(self, id):
         # Traemos de la coleccion de seisms un seism y lo alojamos en la variable, si no existe, error 404.
@@ -177,7 +182,7 @@ class UnverifSeisms(Resource):
         # Definimos la variable "page" para decir cuantas paginas tendremos.
         page = 1
         # Definimos "perpage" para decir cuantos sismos mostrara cada pagina.
-        perpage = 100
+        perpage = 3
 
         # Traemos la coleccion de seisms, pero filtramos los seism verificados.
 
@@ -205,11 +210,11 @@ class UnverifSeisms(Resource):
                 # ORDENAMIENTO
                 # Utilizamos sort_by para ordenar todo de mayor a menor.
                 if key == "sort_by":
-                    if value == "datime":
-                        seisms = seisms.order_by(SeismModel.datime)
+                    if value == "datetime":
+                        seisms = seisms.order_by(SeismModel.datetime)
                     # Se agrega datetime.desc para realizar el ordenamiento y se almacena en la variable.
                     if value == "datetime.desc":
-                        seisms = seisms.order_by(SeismModel.datime.desc())
+                        seisms = seisms.order_by(SeismModel.datetime.desc())
                     if value == "sensorname":
                         seisms = seisms.join(SeismModel.sensor).order_by(SensorModel.name.asc())
                     if value == "sensorname.desc":
@@ -247,7 +252,7 @@ class UnverifSeisms(Resource):
 
         if sensorlist:
             value_sensor = {
-                'dtb': time.strftime(r'%Y-%m-%d %H:%M:%S', time.localtime()), 'depth': randint(5, 250),
+                'datetime': time.strftime(r'%Y-%m-%d %H:%M:%S', time.localtime()), 'depth': randint(5, 250),
                 'magnitude': round(uniform(2.0, 5.5), 1), 'latitude': uniform(-180, 180), 'longitude': uniform(-90, 90),
                 'verified': False, 'sensorId': sensorlist[randint(0, len(sensorlist) - 1)]
             }

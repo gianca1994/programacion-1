@@ -56,6 +56,7 @@ def create_app():
     api.add_resource(resources.UsersResource, '/users')
     api.add_resource(resources.SensorResource, '/sensors/<id>')
     api.add_resource(resources.SensorsResource, '/sensors')
+    api.add_resource(resources.SensorsInfoResource, '/sensors-info')
     api.add_resource(resources.VerifSeismResource, '/verif-seisms/<id>')
     api.add_resource(resources.VerifSeismsResource, '/verif-seisms')
     api.add_resource(resources.UnverifSeismResource, '/unverif-seisms/<id>')
