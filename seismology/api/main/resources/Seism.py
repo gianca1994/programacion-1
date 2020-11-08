@@ -231,7 +231,7 @@ class UnverifSeisms(Resource):
 
                     # Definimos los if dentro de for para la paginacion de sismos no verificados mostrados por pagina.
                     if key == "page":
-                        page = int(Value)
+                        page = int(value)
                     if key == "per_page":
                         perpage = int(value)
 
