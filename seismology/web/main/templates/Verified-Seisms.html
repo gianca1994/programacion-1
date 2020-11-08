@@ -5,6 +5,41 @@
   <div class="media">
     <div class="row col-md-auto justify-content-center">
       <div class="col-md-auto d-none d-ml-auto"></div>
+
+      <div class="col-md-2">
+        <div class="collapse show" id="filter">
+          <div class="container">
+
+            <h3 class="text-uppercase text-center text-white">Filters</h3>
+            
+            <form method="GET" action="{{url_for('verified_seism.index')}}">
+              <div class="form-row">
+                <div class="col">
+                  {{show_submit(filter.submit, class='btn btn-success')}}
+                </div>
+                <div class="col-auto">
+                  {{show_submit(filter.download , class='btn btn-success')}}
+                </div>
+              </div><br>
+
+              <div class="form-row">
+                {{show_field(filter.sensorId, class='form-control')}}
+              </div><br>
+
+              <div class="form-row">
+                {{show_field(filter.datetimeFrom, class='form-control')}}
+                {{show_field(filter.datetimeTo, class='form-control')}}
+              </div><br>
+
+              <div class="form-row">
+                {{show_field(filter.magnitudeMin, class='form-control')}}
+                {{show_field(filter.magnitudeMax, class='form-control')}}
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+
       <div class="col-md-auto">
          <div class="card-body">
             <h5 class="card-title">{{title}}</h5>
