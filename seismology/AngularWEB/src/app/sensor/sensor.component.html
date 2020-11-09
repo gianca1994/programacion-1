@@ -1,1 +1,34 @@
-<p>sensor works!</p>
+<sensor-detail [sensor]="selectedSensor"></sensor-detail>
+
+<table class="table">
+    <thead class="thead-dark">
+        <tr>
+            <th scope="col">ID</th>
+            <th scope="col">Name</th>
+            <th scope="col">Status</th>
+            <th scope="col">Active</th>
+            <th scope="col">User Associated</th>
+            <th scope="col">Actions</th>
+        </tr>
+    </thead>
+
+    <tbody>
+        <tr *ngFor="let sensor of sensors" [class.selected]="sensor === selectedSensor" (click)="onSelect(sensor)">
+            
+            <th scope="row">{{ sensor.id }}</th>
+
+            <td>{{ sensor.name }}</td>
+            <td>{{ sensor.active }}</td>
+            <td>{{ sensor.status }}</td>
+            <td>{{ sensor.user.email }}</td>
+            
+            <td>
+                <div class="btn-group" role="group">
+                    <a type="button" class="btn btn-primary">View</a>
+                    <a type="button" class="btn btn-success" routerLink="edit/{{ sensor.id }}">Edit</a>
+                    <a type="button" class="btn btn-danger">Delete</a>
+                </div>
+            </td>
+        </tr>
+    </tbody>
+</table>
