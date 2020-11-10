@@ -22,11 +22,13 @@ def index():
         if "page" in fact:
             del fact["page"]
 
-    r = sendRequest(method="get", url="/users", auth=True, data = json.dumps(fact))
+    r = sendRequest(method="get", url="/users", auth=True, data=json.dumps(fact))
 
     if r.status_code != 200:
         return redirect(url_for("user.index"))
     else:
+        print(r.text)
+
         users = json.loads(r.text)["Users"]
         paginate = {}
         paginate["total"] = json.loads(r.text)["total"]

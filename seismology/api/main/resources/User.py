@@ -62,11 +62,31 @@ class Users(Resource):
     #  @admin_required
     # Definimos "GET" para obtener la coleccion de "Usuarios".
     def get(self):
+
+        page = 1
+        perpage = 5
+
         # Hacemos un pedido a la base de datos de que traiga a todos los usuarios almacenados en la db.
-        users = db.session.query(UserModel).all()
+        users = db.session.query(UserModel)
+
+        print(request.get_json())
+
+        filters = request.get_json().items()
+
+        for i, val in filters:
+            if i == "page":
+                page = int(val)
+            if i == "perpage":
+                perpage = int(val)
+
+        users = users.paginate(page, perpage, True, 50)
 
         # Nos devolvera en formato json la lista de usuarios de la coleccion.
-        return jsonify({'Users': [user.to_json() for user in users]})
+        return jsonify({'Users': [user.to_json() for user in users.items],
+                        'total': users.total,
+                        'page': users.page,
+                        'pages': users.pages,
+                        })
 
     # Definimos "POST" para crear un recurso y alojarlo en la coleccion "SENSORS".
     def post(self):

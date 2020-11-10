@@ -9,7 +9,7 @@ verifseism = Blueprint("verifseism", __name__, url_prefix="/verified-seism")
 
 @verifseism.route("/")
 def index():
-    #frmLogin = LoginForm()
+    frmLogin = LoginForm()
     filter = SeismFilterForm(request.args, meta={"csrf": False})
     r = sendRequest(method="get", url="/sensors-info")
     filter.sensorId.choices = [
@@ -84,7 +84,7 @@ def index():
         paginate["pages"] = json.loads(r.text)["pages"]
         paginate["current_page"] = json.loads(r.text)["page"]
         title = "Verified Seisms List"
-        return render_template("Verified-Seisms.html", title=title, verified_seisms=verifseism, filter=filter, pagination=paginate)
+        return render_template("Verified-Seisms.html", frmLogin=frmLogin, title=title, verified_seisms=verifseism, filter=filter, pagination=paginate)
     else:
         flash("Filtering Error", "danger")
         return redirect(url_for("verifseism.index"))
@@ -100,6 +100,6 @@ def view(id):
 
     verified_seism = json.loads(r.text)
     title = "Verified Seism View"
-    #loginForm = LoginForm()
+    loginForm = LoginForm()
 
-    return render_template("verified-seism.html", title=title, verified_seism=verified_seism)
+    return render_template("verified-seism.html", frmLogin=loginForm, title=title, verified_seism=verified_seism)

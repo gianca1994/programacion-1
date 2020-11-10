@@ -10,7 +10,7 @@ def sendRequest(method, url, auth=False, data=None):
         headers["authorization"] = "Bearer " + token
 
     if method.lower() == "get":
-        data = requests.get(current_app.config["API_URL"] + url, headers=headers,data=data)
+        data = requests.get(current_app.config["API_URL"] + url, headers=headers, data=data)
 
     if method.lower() == "post":
         data = requests.post(current_app.config["API_URL"] + url, headers=headers, data=data)

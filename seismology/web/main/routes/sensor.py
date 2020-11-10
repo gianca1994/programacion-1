@@ -1,10 +1,12 @@
 from flask import Blueprint, render_template, current_app, redirect, url_for, request
 from flask_breadcrumbs import register_breadcrumb
 import requests, json
+from flask import jsonify
 from flask_login import login_required, LoginManager
 from ..utilities.Functions import sendRequest
 #from .auth import admin_required
 from ..forms.frmSensor import SensorCreateForm, SensorEditForm, SensorFilterForm
+from flask import flash
 
 sensor = Blueprint("sensor", __name__, url_prefix="/sensor")
 
@@ -14,8 +16,13 @@ sensor = Blueprint("sensor", __name__, url_prefix="/sensor")
 @register_breadcrumb(sensor,".","Sensors")
 def index():
 
+    fact = {}
+    fact['perpage'] = 100
+
+    r = sendRequest(method="get",url="/users",auth=True,data=json.dumps(fact))
+
     filter = SensorFilterForm(request.args, meta={'crsf': False})
-    r = sendRequest(method="get", url="/users", auth=True)
+
     filter.userId.choices = [(item['id'], item['email']) for item in json.loads(r.text)["Users"]]
     filter.userId.choices.insert(0, [0, 'All'])
     fact = {}
@@ -41,15 +48,15 @@ def index():
 
     r = sendRequest(method="get", url="/sensors", data=json.dumps(fact), auth=True)
 
-    if (r.status_code == 200):
-        sensors = json.loads(r.text)["sensors"]
+    if r.status_code == 200:
+        sensors = json.loads(r.text)["Sensors"]
         paginate = {}
         paginate['total'] = json.loads(r.text)['total']
         paginate['pages'] = json.loads(r.text)['pages']
         paginate['current_page'] = json.loads(r.text)['page']
         title = "Sensors"
 
-        return render_template("sensors.html", title=title, sensors=sensors, filter=filter, pagination=paginate)
+        return render_template("Sensors.html", title=title, sensors=sensors, filter=filter, pagination=paginate)
     else:
         flash("filtering error", "danger")
         redirect(url_for('main.logout'))

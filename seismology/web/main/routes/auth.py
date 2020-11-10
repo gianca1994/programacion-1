@@ -2,7 +2,7 @@ from flask import request, flash, redirect, url_for
 from flask_login import UserMixin, current_user
 from functools import wraps
 import jwt
-from main.__init__ import login_manager
+from .. import login_manager
 
 # Creamos esta clase para almacenar los datos del usuario previamente logueado.
 class User(UserMixin):

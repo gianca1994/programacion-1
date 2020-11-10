@@ -84,6 +84,7 @@ class Sensors(Resource):
         # Traemos la coleccion de sensores de la db y la alojamos en la variable "sensors".
         sensors = db.session.query(SensorModel)
 
+
         if request.get_json():
             # Filtraremos el/los sensores a mostrar "request.get_json().items()" y los almacenaremos en la variable.
             filters = request.get_json().items()
@@ -121,11 +122,12 @@ class Sensors(Resource):
                 if key == "perpage":
                     perpage = int(value)
 
-            # Alojamos en la variable sensors, todos los sensores obtenidos de las paginas.
-            sensors = sensors.paginate(page, perpage, True, 500)
+        # Alojamos en la variable sensors, todos los sensores obtenidos de las paginas.
+        sensors = sensors.paginate(page, perpage, True, 500)
 
-            # Nos devuelve la coleccion con los sensores filtrados.
-            return jsonify({"Sensors": [sensor.to_json() for sensor in sensors.items], "total": sensors.total,
+        # Nos devuelve la coleccion con los sensores filtrados.
+        return jsonify({"Sensors": [sensor.to_json() for sensor in sensors.items],
+                            "total": sensors.total,
                             "pages": sensors.pages,
                             "page": page})
 
