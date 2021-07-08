@@ -66,34 +66,34 @@ class Users(Resource):
         page = 1
         perpage = 5
 
-        # Hacemos un pedido a la base de datos de que traiga a todos los usuarios almacenados en la db.
+        # # Hacemos un pedido a la base de datos de que traiga a todos los usuarios almacenados en la db.
         users = db.session.query(UserModel)
 
-        print(request.get_json())
-
-        filters = request.get_json().items()
-
-        for i, val in filters:
-            if i == "page":
-                page = int(val)
-            if i == "perpage":
-                perpage = int(val)
+        for k, v in request.get_json().items():
+            if k == "page":
+                page = int(v)
+            if k == "perpage":
+                perpage = int(v)
 
         users = users.paginate(page, perpage, True, 50)
 
-        # Nos devolvera en formato json la lista de usuarios de la coleccion.
-        return jsonify({'Users': [user.to_json() for user in users.items],
-                        'total': users.total,
-                        'page': users.page,
-                        'pages': users.pages,
-                        })
+        # Nos devolvera en formato json la lista de usuarios de la coleccion.       
+        return jsonify(
+                    {
+                        "Users": [user.to_json() for user in users.items],
+                        "total": users.total,
+                        "pages": users.page,
+                        "page": page,
+                    }
+                )
 
     # Definimos "POST" para crear un recurso y alojarlo en la coleccion "SENSORS".
     def post(self):
         # Traemos la coleccion de recursos y la alojamos en la variable "user"
         user = UserModel.from_json(request.get_json())
         # Traemos el email de la db y lo filtramos por usuario
-        emailinuse = db.session.query(UserModel).filter(UserModel.email == user.email).scalar() is not None
+        emailinuse = db.session.query(UserModel).filter(
+            UserModel.email == user.email).scalar() is not None
         # Si el email esta en uso, osea, se intenta duplicar
         if emailinuse:
             # Nos retorna que el email ya esta en uso con un codigo 409.
