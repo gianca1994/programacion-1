@@ -20,22 +20,29 @@ def create_app():
     app = Flask(__name__)
     load_dotenv()
 
+    if not os.path.exists(os.getenv('SQLALCHEMY_INITIAL_DATABASE_PATH')):
+        os.mkdir(os.getenv('SQLALCHEMY_INITIAL_DATABASE_PATH'))
+
     # Verifica si existe o no una DB con ese nombre y si no existe la crea...
-    if not os.path.exists(os.getenv("SQLALCHEMY_DATABASE_PATH") + os.getenv("SQLALCHEMY_DATABASE_NAME")):
+    if not os.path.exists(os.getenv("SQLALCHEMY_DATABASE_PATH") + os.getenv(
+        'SQLALCHEMY_INITIAL_DATABASE_PATH') + '/' + os.getenv("SQLALCHEMY_DATABASE_NAME")):
+        
         # Crea una base de datos con ese nombre.
-        os.mknod(os.getenv('SQLALCHEMY_DATABASE_PATH') + os.getenv('SQLALCHEMY_DATABASE_NAME'))
+        os.mknod(os.getenv('SQLALCHEMY_DATABASE_PATH') + os.getenv(
+            'SQLALCHEMY_INITIAL_DATABASE_PATH') + '/' + os.getenv('SQLALCHEMY_DATABASE_NAME'))
 
     # Si esta en "TRUE", TRACKEA eventos
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
     # Ahora indicamos la url de nuestra base de datos
-    app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:////' + os.getenv('SQLALCHEMY_DATABASE_PATH') + os.getenv(
+    app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:////' + os.getenv('SQLALCHEMY_DATABASE_PATH') + os.getenv('SQLALCHEMY_INITIAL_DATABASE_PATH') + '/' + os.getenv(
         'SQLALCHEMY_DATABASE_NAME')
     db.init_app(app)
 
     # Aca traemos el key del token ingresado en el .env como tambien el timpo de expiracion...
     app.config["JWT_SECRET_KEY"] = os.getenv("JWT_SECRET_KEY")
-    app.config['JWT_ACCESS_TOKEN_EXPIRES'] = int(os.getenv('JWT_ACCESS_TOKEN_EXPIRES'))
+    app.config['JWT_ACCESS_TOKEN_EXPIRES'] = int(
+        os.getenv('JWT_ACCESS_TOKEN_EXPIRES'))
     jwt.init_app(app)
 
     # Ahora haceremos las conecciones de las claves foraneas cuando iniciamos el servidor...
