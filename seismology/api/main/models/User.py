@@ -41,7 +41,11 @@ class User(db.Model):
     # Para convertir un obj a JSON, primero definimos "to_json".
     def to_json(self):
         # Creamos una variable en este caso llamada "user_json" a la que le asignaremos los valores de: id y email.
-        user_json = {'id': self.id, 'email': str(self.email), "admin": self.admin}
+        user_json = {
+            'id': self.id,
+            'email': str(self.email),
+            "admin": self.admin
+        }
 
         # Devolvemos la variable con los valores asignados.
         return user_json
@@ -55,8 +59,16 @@ class User(db.Model):
         admin = user_json.get('admin')
 
         # Devolvemos el usuario con todos los argumentos en forma de OBJETO
-        return User(id=id, plain_password=password, email=email, admin=admin)
+        return User(
+            id=id,
+            plain_password=password,
+            email=email,
+            admin=admin
+        )
 
     def to_json_public(self):
-        user_json = {"id": self.id, "email": str(self.email)}
+        user_json = {
+            "id": self.id,
+            "email": str(self.email)
+        }
         return user_json

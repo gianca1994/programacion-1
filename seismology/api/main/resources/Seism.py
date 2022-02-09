@@ -42,7 +42,8 @@ class VerifSeisms(Resource):
         # Definimos "perpage" para decir cuantos sensores mostrara cada pagina.
         perpage = 3
         # Aca analizamos los datos y filtramos los Seisms verificados de la coleccion,"verified == True".
-        seisms = db.session.query(SeismModel).filter(SeismModel.verified == True)
+        seisms = db.session.query(SeismModel).filter(
+            SeismModel.verified == True)
 
         if request.get_json():
             filter = request.get_json().items()
@@ -64,7 +65,8 @@ class VerifSeisms(Resource):
                 if key == "magnitudeMin":
                     seisms = seisms.filter(SeismModel.magnitude == value)
                 if key == "sensor.name":
-                    seisms = seisms.join(SeismModel.sensor).filter(SensorModel.name.like('%' + value + '%'))
+                    seisms = seisms.join(SeismModel.sensor).filter(
+                        SensorModel.name.like('%' + value + '%'))
 
                 # ORDENAMIENTO
                 # Utilizamos sort_by para ordenar todo de mayor a menor.
@@ -74,9 +76,11 @@ class VerifSeisms(Resource):
                     if value == "datime.desc":
                         seisms = seisms.order_by(SeismModel.dt.desc())
                     if value == "sensor.name":
-                        seisms = seisms.join(SeismModel.sensor).orderby(SensorModel.name)
+                        seisms = seisms.join(
+                            SeismModel.sensor).orderby(SensorModel.name)
                     if value == "sensor.namedesc":
-                        seisms = seisms.join(SeismModel.sensor).orderby(SensorModel.name.desc())
+                        seisms = seisms.join(SeismModel.sensor).orderby(
+                            SensorModel.name.desc())
 
                 # Definimos los if dentro de for para paginas y cantidad de sismos mostrados por pagina.
                 if key == "page":
@@ -88,11 +92,14 @@ class VerifSeisms(Resource):
         seisms = seisms.paginate(page, perpage, True, 500)
 
         # Con el return nos devolvera la coleccion de Seisms.
-        return jsonify({
+        return jsonify(
+            {
                 'Verif-seisms': [seism.to_json() for seism in seisms.items],
-                'total' : seisms.total,
-                'pages' : seisms.pages,
-                'page' : page,})
+                'total': seisms.total,
+                'pages': seisms.pages,
+                'page': page,
+            }
+        )
 
 
 # -------------------------------------------------------------------------------------#
@@ -186,7 +193,8 @@ class UnverifSeisms(Resource):
 
         # Traemos la coleccion de seisms, pero filtramos los seism verificados.
 
-        seisms = db.session.query(SeismModel).filter(SeismModel.verified == False)
+        seisms = db.session.query(SeismModel).filter(
+            SeismModel.verified == False)
 
         if request.get_json():
             filters = request.get_json().items()
@@ -216,9 +224,11 @@ class UnverifSeisms(Resource):
                     if value == "datetime.desc":
                         seisms = seisms.order_by(SeismModel.datetime.desc())
                     if value == "sensorname":
-                        seisms = seisms.join(SeismModel.sensor).order_by(SensorModel.name.asc())
+                        seisms = seisms.join(SeismModel.sensor).order_by(
+                            SensorModel.name.asc())
                     if value == "sensorname.desc":
-                        seisms = seisms.join(SeismModel.sensor).order_by(SensorModel.name.desc())
+                        seisms = seisms.join(SeismModel.sensor).order_by(
+                            SensorModel.name.desc())
 
                     if value == "magnitude":
                         seisms = seisms.order_by(SeismModel.magnitude.asc())
@@ -239,8 +249,14 @@ class UnverifSeisms(Resource):
         seisms = seisms.paginate(page, perpage, True, 100)
 
         # Nos devuelve la coleccion con los seisms no verificados filtrados.
-        return jsonify({"Unverif-seisms": [seism.to_json() for seism in seisms.items], "total": seisms.total, "pages": seisms.pages,
-                        "page": page})
+        return jsonify(
+            {
+                "Unverif-seisms": [seism.to_json() for seism in seisms.items],
+                "total": seisms.total,
+                "pages": seisms.pages,
+                "page": page
+            }
+        )
 
   #  @jwt_required
     # Definimos "POST" para agregar un seisms no verificado a la coleccion.
@@ -252,9 +268,13 @@ class UnverifSeisms(Resource):
 
         if sensorlist:
             value_sensor = {
-                'datetime': time.strftime(r'%Y-%m-%d %H:%M:%S', time.localtime()), 'depth': randint(5, 250),
-                'magnitude': round(uniform(2.0, 5.5), 1), 'latitude': uniform(-180, 180), 'longitude': uniform(-90, 90),
-                'verified': False, 'sensorId': sensorlist[randint(0, len(sensorlist) - 1)]
+                'datetime': time.strftime(r'%Y-%m-%d %H:%M:%S', time.localtime()),
+                'depth': randint(5, 250),
+                'magnitude': round(uniform(2.0, 5.5), 1),
+                'latitude': uniform(-180, 180),
+                'longitude': uniform(-90, 90),
+                'verified': False,
+                'sensorId': sensorlist[randint(0, len(sensorlist) - 1)]
             }
 
             seism = SeismModel.from_json(value_sensor)

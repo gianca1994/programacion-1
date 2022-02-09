@@ -49,7 +49,7 @@ def login():
 
 @auth.route("/checksensors", methods=["GET"])
 # La función integrada nos permitirá decir que solo los admins pueden ingresar a esta seccion.
-#@admin_required
+# @admin_required
 # Definimos checkStatus para...
 def checkStatus():
     # Alojamos en sensors, todos los sensores de la db filtrados por active y status.
@@ -100,8 +100,12 @@ def checkStatus():
       #      msg.attach(filename=SensorsList, content_type=application/pdf, data=sensors, disposition=None, headers=None)
 
             # Enviamos el email con el archivo adjunto
-            sendMail(adminList, "Deactivated sensors",
-                     "mail/sensor", sensorList=sensors)
+            sendMail(
+                adminList,
+                "Deactivated sensors",
+                "mail/sensor",
+                sensorList=sensors
+            )
 
         # Nos retorna los datos del sensor
         return "There're no sensors", 200

@@ -18,8 +18,10 @@ class Sensor(db.Model):
     # Clave foranea
     userId = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=True)
     # Relaciones entre tablas
-    user = db.relationship('User', back_populates='sensors', uselist=False, single_parent=True)
-    seisms = db.relationship('Seism', back_populates='sensor', passive_deletes='all')
+    user = db.relationship('User', back_populates='sensors',
+                           uselist=False, single_parent=True)
+    seisms = db.relationship(
+        'Seism', back_populates='sensor', passive_deletes='all')
 
     # Creamos la funcion __repr__ que nos mostrara los datos de cada Sensor que carguemos.
     def __repr__(self):
@@ -35,13 +37,27 @@ class Sensor(db.Model):
 
         # Realiza la operacion
         try:
-            sensor_json = {'id': self.id, 'name': (self.name), 'ip': (self.ip), 'port': self.port,
-                           'status': self.status, 'active': self.active, 'user': self.user.to_json()}
+            sensor_json = {
+                'id': self.id,
+                'name': (self.name),
+                'ip': (self.ip),
+                'port': self.port,
+                'status': self.status,
+                'active': self.active,
+                'user': self.user.to_json()
+            }
 
         # Si algo pasa o ocurre mal...
         except:
-            sensor_json = {'id': self.id, 'name': self.name, 'ip': self.ip, 'port': self.port, 'status': self.status,
-                           'active': self.active, 'userId': self.userId}
+            sensor_json = {
+                'id': self.id,
+                'name': self.name,
+                'ip': self.ip,
+                'port': self.port,
+                'status': self.status,
+                'active': self.active,
+                'userId': self.userId
+            }
 
         # Devolvemos la variable con los valores asignados.
         return sensor_json
@@ -60,8 +76,19 @@ class Sensor(db.Model):
         userId = sensor_json.get('userId')
 
         # Devolvemos el Sensor con todos los argumentos en forma de OBJETO
-        return Sensor(id=id, name=name, ip=ip, port=port, status=status, active=active, userId=userId)
+        return Sensor(
+            id=id,
+            name=name,
+            ip=ip,
+            port=port,
+            status=status,
+            active=active,
+            userId=userId
+        )
 
     def to_json_public(self):
-        sensor_json = {"id": self.id, "name": str(self.name)}
+        sensor_json = {
+            "id": self.id,
+            "name": str(self.name)
+        }
         return sensor_json

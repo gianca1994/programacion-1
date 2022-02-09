@@ -84,7 +84,6 @@ class Sensors(Resource):
         # Traemos la coleccion de sensores de la db y la alojamos en la variable "sensors".
         sensors = db.session.query(SensorModel)
 
-
         if request.get_json():
             # Filtraremos el/los sensores a mostrar "request.get_json().items()" y los almacenaremos en la variable.
             filters = request.get_json().items()
@@ -93,7 +92,8 @@ class Sensors(Resource):
             for key, value in filters:
                 # Utilizamos condicionales para filtrar por partes...
                 if key == "name":
-                    sensors = sensors.filter(SensorModel.name.like("%" + value + "%"))
+                    sensors = sensors.filter(
+                        SensorModel.name.like("%" + value + "%"))
                 if key == "userId[lte]":
                     sensors = sensors.filter(SensorModel.userId <= value)
                 if key == "userId[gte]":
@@ -126,10 +126,14 @@ class Sensors(Resource):
         sensors = sensors.paginate(page, perpage, True, 500)
 
         # Nos devuelve la coleccion con los sensores filtrados.
-        return jsonify({"Sensors": [sensor.to_json() for sensor in sensors.items],
-                            "total": sensors.total,
-                            "pages": sensors.pages,
-                            "page": page})
+        return jsonify(
+            {
+                "Sensors": [sensor.to_json() for sensor in sensors.items],
+                "total": sensors.total,
+                "pages": sensors.pages,
+                "page": page
+            }
+        )
 
     #  @admin_required
     # Definimos "POST" para agregar un sensor a la coleccion.
@@ -153,4 +157,8 @@ class SensorsInfo(Resource):
     # Obtenemos la lista de sensores que sera mostrado a los clientes no logueados
     def get(self):
         sensors = db.session.query(SensorModel)
-        return jsonify({"sensors": [sensor.to_json_public() for sensor in sensors]})
+        return jsonify(
+            {
+                "sensors": [sensor.to_json_public() for sensor in sensors]
+            }
+        )

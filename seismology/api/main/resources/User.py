@@ -77,15 +77,15 @@ class Users(Resource):
 
         users = users.paginate(page, perpage, True, 50)
 
-        # Nos devolvera en formato json la lista de usuarios de la coleccion.       
+        # Nos devolvera en formato json la lista de usuarios de la coleccion.
         return jsonify(
-                    {
-                        "Users": [user.to_json() for user in users.items],
-                        "total": users.total,
-                        "pages": users.page,
-                        "page": page,
-                    }
-                )
+            {
+                "Users": [user.to_json() for user in users.items],
+                "total": users.total,
+                "pages": users.page,
+                "page": page
+            }
+        )
 
     # Definimos "POST" para crear un recurso y alojarlo en la coleccion "SENSORS".
     def post(self):
@@ -113,4 +113,8 @@ class UsersInfo(Resource):
     def get(self):
         users = db.session.query(UserModel)
         # Devolvemos la misma, con un formato publico, para los users que no estan logueados...
-        return jsonify({"Users": [user.to_json_public() for user in users]})
+        return jsonify(
+            {
+                "Users": [user.to_json_public() for user in users]
+            }
+        )

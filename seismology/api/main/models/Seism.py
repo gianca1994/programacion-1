@@ -18,8 +18,10 @@ class Seism(db.Model):
     verified = db.Column(db.Boolean, nullable=False)
 
     # Claves foraneas y relaciones entre tablas
-    sensorId = db.Column(db.Integer, db.ForeignKey('sensor.id', ondelete='RESTRICT'), nullable=False)
-    sensor = db.relationship('Sensor', back_populates='seisms', uselist=False, single_parent=True)
+    sensorId = db.Column(db.Integer, db.ForeignKey(
+        'sensor.id', ondelete='RESTRICT'), nullable=False)
+    sensor = db.relationship(
+        'Sensor', back_populates='seisms', uselist=False, single_parent=True)
 
     # Creamos la funcion __repr__ que nos mostrara los datos de cada seism que carguemos.
     def __repr__(self):
@@ -33,9 +35,15 @@ class Seism(db.Model):
 
         # Realizamos la operacion...
         seism_json = {
-            'id': self.id, 'datetime': self.datetime.strftime("%Y-%m-%d %H:%M:%S"), 'magnitude': str(self.magnitude),
-            'latitude': str(self.latitude), 'longitude': str(self.longitude), 'depth': self.depth,
-            'verified': self.verified, 'sensorId': self.sensorId, 'sensor': self.sensor.to_json()
+            'id': self.id,
+            'datetime': self.datetime.strftime("%Y-%m-%d %H:%M:%S"),
+            'magnitude': str(self.magnitude),
+            'latitude': str(self.latitude),
+            'longitude': str(self.longitude),
+            'depth': self.depth,
+            'verified': self.verified,
+            'sensorId': self.sensorId,
+            'sensor': self.sensor.to_json()
         }
 
         # Devolvemos la variable con los valores asignados.
@@ -46,7 +54,8 @@ class Seism(db.Model):
     def from_json(seism_json):
         # Luego asiganmos a las variables, los valores traidos del JSON usando "seism_json.get", para en cada caso.
         id = seism_json.get('id')
-        datetime = dtdb.strptime(seism_json.get('datetime'), "%Y-%m-%d %H:%M:%S")
+        datetime = dtdb.strptime(seism_json.get(
+            'datetime'), "%Y-%m-%d %H:%M:%S")
         magnitude = seism_json.get('magnitude')
         latitude = seism_json.get('latitude')
         longitude = seism_json.get('longitude')
@@ -55,5 +64,13 @@ class Seism(db.Model):
         sensorId = seism_json.get('sensorId')
 
         # Devolvemos el Seism con todos los argumentos en forma de OBJETO
-        return Seism(id=id, datetime=datetime, magnitude=magnitude, latitude=latitude, longitude=longitude,
-                     depth=depth, verified=verified, sensorId=sensorId)
+        return Seism(
+            id=id,
+            datetime=datetime,
+            magnitude=magnitude,
+            latitude=latitude,
+            longitude=longitude,
+            depth=depth,
+            verified=verified,
+            sensorId=sensorId
+        )
